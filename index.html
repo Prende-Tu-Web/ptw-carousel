@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PTW · Generador de Carruseles</title>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --dark:    #111a1b;
+  --coral:   #ff638f;
+  --light:   #f1eff4;
+  --lav:     #e8e6ed;
+  --muted:   #6b7077;
+  --white:   #ffffff;
+  --border:  rgba(17,26,27,.1);
+  --font:    'Rubik', sans-serif;
+  --ease:    cubic-bezier(0.16,1,0.3,1);
+}
+
+html, body { height: 100%; }
+
+body {
+  font-family: var(--font);
+  background: var(--light);
+  color: var(--dark);
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ── HEADER ── */
+header {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  box-shadow: 0 1px 0 var(--border);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.logo-icon {
+  width: 30px; height: 30px;
+  color: var(--coral);
+  flex-shrink: 0;
+}
+.logo-text {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--dark);
+  letter-spacing: -.02em;
+}
+.logo-text span { color: var(--coral); }
+.logo-badge {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--muted);
+  background: var(--lav);
+  padding: 2px 8px;
+  border-radius: 100px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+/* ── LAYOUT ── */
+.app {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  overflow: hidden;
+  height: 100%;
+}
+
+/* ── PANEL IZQUIERDO ── */
+.panel {
+  background: var(--white);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.panel-block {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.panel-block:last-child {
+  border-bottom: none;
+  flex: 1;
+}
+
+.block-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: .85rem;
+}
+
+/* platform toggle */
+.plat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.plat-btn {
+  padding: 10px 8px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border);
+  background: var(--light);
+  cursor: pointer;
+  transition: all .2s var(--ease);
+  font-family: var(--font);
+  text-align: center;
+  color: var(--muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.plat-icon { font-size: 1.3rem; }
+.plat-name { font-size: 11px; font-weight: 700; letter-spacing: .04em; }
+.plat-btn:hover {
+  border-color: rgba(255,99,143,.4);
+  color: var(--dark);
+  background: #fff5f8;
+}
+.plat-btn.active {
+  border-color: var(--coral);
+  background: #fff0f4;
+  color: var(--dark);
+}
+.plat-btn.active .plat-name { color: var(--coral); }
+
+/* inputs */
+.field { margin-bottom: .85rem; }
+.field:last-child { margin-bottom: 0; }
+.field label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 5px;
+  letter-spacing: .02em;
+}
+textarea, input[type="text"] {
+  width: 100%;
+  background: var(--light);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: var(--dark);
+  font-family: var(--font);
+  font-size: 13.5px;
+  line-height: 1.5;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+textarea { resize: none; }
+textarea:focus, input[type="text"]:focus {
+  border-color: var(--coral);
+  box-shadow: 0 0 0 3px rgba(255,99,143,.1);
+}
+textarea::placeholder, input::placeholder {
+  color: rgba(107,112,119,.45);
+}
+
+/* example chips */
+.chips {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.chip {
+  padding: 7px 10px;
+  background: var(--light);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all .18s;
+  font-family: var(--font);
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.chip::before {
+  content: '→';
+  color: var(--coral);
+  flex-shrink: 0;
+  font-weight: 700;
+}
+.chip:hover {
+  background: #fff0f4;
+  border-color: rgba(255,99,143,.35);
+  color: var(--dark);
+}
+
+/* generate button */
+.btn-gen {
+  width: 100%;
+  padding: 13px;
+  background: var(--coral);
+  border: none;
+  border-radius: 12px;
+  color: #fff;
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .25s var(--ease);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  letter-spacing: .01em;
+  box-shadow: 0 4px 14px rgba(255,99,143,.3);
+}
+.btn-gen:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(255,99,143,.4);
+}
+.btn-gen:active:not(:disabled) { transform: translateY(0); }
+.btn-gen:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.spin {
+  width: 17px; height: 17px;
+  border: 2px solid rgba(255,255,255,.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin .65s linear infinite;
+  display: none;
+  flex-shrink: 0;
+}
+.loading .spin { display: block; }
+.loading .btn-label { display: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.cost-hint {
+  font-size: 11px;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 7px;
+}
+.cost-hint strong { color: var(--coral); font-weight: 600; }
+
+/* status */
+.status {
+  margin-top: 10px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  display: none;
+  line-height: 1.4;
+}
+.status.err  { background: #fff1f1; border: 1px solid #fecaca; color: #dc2626; display: block; }
+.status.ok   { background: #f0fdf4; border: 1px solid #bbf7d0; color: #16a34a; display: block; }
+
+/* ── PREVIEW AREA ── */
+.preview {
+  background: var(--lav);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  gap: 0;
+}
+
+/* empty state */
+.empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 10px;
+  color: var(--muted);
+}
+.empty-icon {
+  font-size: 2.8rem;
+  opacity: .35;
+  margin-bottom: 4px;
+}
+.empty h3 { font-size: 15px; font-weight: 700; color: var(--dark); opacity: .4; }
+.empty p  { font-size: 12.5px; line-height: 1.6; max-width: 28ch; opacity: .6; }
+
+/* preview toolbar */
+.prev-bar {
+  width: 100%;
+  max-width: 580px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.prev-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.prev-actions { display: flex; gap: 6px; }
+.prev-btn {
+  padding: 5px 13px;
+  border-radius: 100px;
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  color: var(--muted);
+  font-family: var(--font);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .2s;
+  letter-spacing: .04em;
+}
+.prev-btn:hover { border-color: var(--coral); color: var(--coral); }
+.prev-btn.on {
+  background: var(--coral);
+  border-color: var(--coral);
+  color: #fff;
+}
+
+/* skeleton */
+.skeleton {
+  width: 100%;
+  max-width: 580px;
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+}
+.sk-slide {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 16px;
+  background: rgba(17,26,27,.08);
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+@keyframes shimmer {
+  0%,100%{ opacity:.5; }
+  50%    { opacity:1; }
+}
+
+/* iframe wrapper */
+#carouselWrap {
+  width: 100%;
+  max-width: 580px;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+}
+#slideFrame {
+  width: 100%;
+  border: none;
+  border-radius: 16px;
+  display: block;
+  box-shadow: 0 8px 40px rgba(17,26,27,.12);
+}
+
+@media (max-width: 860px) {
+  .app {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    overflow: auto;
+    height: auto;
+  }
+  .panel { max-height: none; overflow: visible; }
+  body { overflow: auto; height: auto; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <svg class="logo-icon" viewBox="0 0 1599 1410.88" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+      <path d="m896.91,860.07h-194.81c-18.4,0-27.62,22.25-14.61,35.26l112.01,112.01,112.01-112.01c13.01-13.01,3.8-35.26-14.61-35.26Z"></path>
+      <path d="m1537.04,860.07h-66.23v-269.76l72.57-326.43,28.02-126.27,7.3-32.77c7.09-31.95-4.2-64.58-29.54-85.31-25.27-20.66-59.56-25.34-89.44-12.05l-475.28,211.24c-6.61,2.96-13.7,4.48-20.93,4.48h-328.01c-7.23,0-14.32-1.51-20.93-4.48L139.28,7.47C109.4-5.75,75.11-1.13,49.84,19.52c-25.34,20.72-36.63,53.36-29.54,85.31l7.3,32.77,28.02,126.27,72.57,326.43v269.76H61.96c-34.22,0-61.96,27.74-61.96,61.96h0c0,3.81,3.08,6.89,6.89,6.89h122.05c3.45,35.63,18.99,68.67,44.63,94.26l2.32,2.32-64.53,10.75c-33.75,5.63-56.56,37.55-50.93,71.3h0c.62,3.76,4.17,6.29,7.92,5.66l167.36-27.89,125.27,125.27c28.64,28.71,66.65,44.67,107.16,45.26l109.66,109.66c29.26,29.26,68.16,45.37,109.54,45.37h193.34c41.38,0,80.28-16.11,109.54-45.37l109.54-109.54h28.78c41.38,0,80.28-16.11,109.54-45.37l125.22-125.26,167.34,27.89c3.75.62,7.3-1.91,7.92-5.66,5.63-33.76-17.18-65.68-50.93-71.31l-64.52-10.75,2.32-2.32c25.65-25.58,41.18-58.63,44.63-94.26h122.05c3.8,0,6.89-3.08,6.89-6.89h0c0-34.23-27.74-61.97-61.96-61.97Z"></path>
+    </svg>
+    <span class="logo-text">Prende Tu <span>Web</span></span>
+    <span class="logo-badge">Carruseles</span>
+  </div>
+</header>
+
+<!-- APP -->
+<div class="app">
+
+  <!-- PANEL -->
+  <div class="panel">
+
+    <!-- Plataforma -->
+    <div class="panel-block">
+      <div class="block-label">Plataforma</div>
+      <div class="plat-grid">
+        <button class="plat-btn active" data-plat="instagram" onclick="setPlatform(this)">
+          <span class="plat-icon">📸</span>
+          <span class="plat-name">Instagram</span>
+        </button>
+        <button class="plat-btn" data-plat="linkedin" onclick="setPlatform(this)">
+          <span class="plat-icon">💼</span>
+          <span class="plat-name">LinkedIn</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Tema -->
+    <div class="panel-block">
+      <div class="block-label">Tema del carrusel</div>
+      <div class="field">
+        <label>¿De qué trata?</label>
+        <textarea id="promptInput" rows="4"
+          placeholder="Ej: 5 errores de SEO que cometen las pymes chilenas…"></textarea>
+      </div>
+      <div class="field">
+        <label>URL de referencia (opcional)</label>
+        <input type="text" id="urlInput"
+          placeholder="https://prendetuweb.cl/blog/mi-post">
+      </div>
+    </div>
+
+    <!-- Ejemplos -->
+    <div class="panel-block">
+      <div class="block-label">Ejemplos rápidos</div>
+      <div class="chips">
+        <button class="chip" onclick="useExample(this)">5 errores de SEO que destruyen tu posicionamiento</button>
+        <button class="chip" onclick="useExample(this)">Por qué tu sitio web no convierte visitas en clientes</button>
+        <button class="chip" onclick="useExample(this)">Cómo aparecer primero en Google sin pagar publicidad</button>
+        <button class="chip" onclick="useExample(this)">WordPress vs otras plataformas: cuál elegir para tu negocio</button>
+        <button class="chip" onclick="useExample(this)">GEO: cómo posicionarte en ChatGPT y Perplexity</button>
+      </div>
+    </div>
+
+    <!-- Generar -->
+    <div class="panel-block">
+      <button class="btn-gen" id="genBtn" onclick="generate()">
+        <div class="spin" id="spinner"></div>
+        <span class="btn-label">✨ Generar carrusel</span>
+      </button>
+      <p class="cost-hint">~<strong>$20 pesos</strong> por carrusel generado</p>
+      <div class="status" id="statusMsg"></div>
+    </div>
+
+  </div>
+
+  <!-- PREVIEW -->
+  <div class="preview" id="previewArea">
+
+    <div class="empty" id="emptyState">
+      <div class="empty-icon">🎠</div>
+      <h3>Tu carrusel aparecerá aquí</h3>
+      <p>Escribe el tema, elige la plataforma y genera.</p>
+    </div>
+
+    <div class="skeleton" id="skeleton">
+      <div class="sk-slide"></div>
+      <div class="sk-slide" style="opacity:.55"></div>
+      <div class="sk-slide" style="opacity:.3"></div>
+    </div>
+
+    <div id="carouselWrap">
+      <div class="prev-bar">
+        <span class="prev-title">Preview — 7 slides</span>
+        <div class="prev-actions">
+          <button class="prev-btn on" id="btn11" onclick="setFormat('1:1',this)">1:1</button>
+          <button class="prev-btn" id="btn45" onclick="setFormat('4:5',this)">4:5</button>
+          <button class="prev-btn" onclick="downloadHTML()">⬇ Descargar</button>
+        </div>
+      </div>
+      <iframe id="slideFrame" scrolling="no"></iframe>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let platform = 'instagram';
+  let format   = '1:1';
+  let slides   = null;
+  let tplHTML  = null;
+
+  fetch('/template.html').then(r=>r.text()).then(h=>{ tplHTML=h; }).catch(()=>{});
+
+  function setPlatform(btn) {
+    document.querySelectorAll('.plat-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    platform = btn.dataset.plat;
+  }
+
+  function useExample(btn) {
+    document.getElementById('promptInput').value = btn.textContent.trim();
+    document.getElementById('promptInput').focus();
+  }
+
+  function setFormat(fmt, btn) {
+    format = fmt;
+    document.querySelectorAll('.prev-btn').forEach(b=>b.classList.remove('on'));
+    btn.classList.add('on');
+    if (slides) renderCarousel(slides);
+  }
+
+  function setStatus(msg, type) {
+    const el = document.getElementById('statusMsg');
+    el.textContent = msg;
+    el.className = `status ${type}`;
+  }
+  function clearStatus() {
+    document.getElementById('statusMsg').className = 'status';
+  }
+
+  function setLoading(on) {
+    const btn = document.getElementById('genBtn');
+    btn.disabled = on;
+    btn.classList.toggle('loading', on);
+    document.getElementById('skeleton').style.display    = on ? 'flex' : 'none';
+    document.getElementById('emptyState').style.display  = on ? 'none' : '';
+    if (on) document.getElementById('carouselWrap').style.display = 'none';
+  }
+
+  async function generate() {
+    const prompt = document.getElementById('promptInput').value.trim();
+    if (!prompt) { setStatus('Por favor escribe el tema del carrusel', 'err'); return; }
+    if (!tplHTML) { setStatus('Template cargando, intenta en un segundo', 'err'); return; }
+    clearStatus();
+    setLoading(true);
+    document.getElementById('emptyState').style.display = 'none';
+
+    try {
+      const res = await fetch('/api/generate', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({
+          prompt,
+          platform,
+          topic: document.getElementById('urlInput').value.trim() || null
+        })
+      });
+      const data = await res.json();
+      if (!res.ok || data.error) throw new Error(data.error || 'Error desconocido');
+      slides = data.slides;
+      renderCarousel(data.slides);
+      setStatus('✓ Carrusel generado exitosamente', 'ok');
+    } catch(err) {
+      setStatus(`Error: ${err.message}`, 'err');
+      document.getElementById('emptyState').style.display = 'flex';
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function injectSlides(html, s) {
+    let r = html;
+    const nth = (pattern, n, repl) => {
+      let i=0;
+      return r.replace(pattern, (m,...args)=>{ i++; return i===n ? repl(m,...args) : m; });
+    };
+
+    // SLIDE 1
+    if(s.slide1) {
+      r = r.replace(/(<div class="eyebrow edit">)[^<]*/,         `$1${s.slide1.eyebrow}`);
+      const hl = s.slide1.headline.replace(/\[([^\]]+)\]/,'<span class="c">$1</span>');
+      r = r.replace(/(<h1 class="edit">)([\s\S]*?)(<\/h1>)/, (_,a,b,c,idx)=> {
+        // only first h1
+        return `${a}${hl}${c}`;
+      });
+      r = nth(/(<div class="sub edit">)[^<]*/g, 1, (_,p1)=>`${p1}${s.slide1.sub}`);
+    }
+
+    // Helper: replace nth occurrence of a pattern
+    const replaceNth = (pat, n, fn) => {
+      let i=0; r = r.replace(pat,(m,...a)=>{ i++; return i===n?fn(m,...a):m; });
+    };
+
+    // SLIDE 2
+    if(s.slide2) {
+      replaceNth(/(<div class="tag edit">)[^<]*/g,       1, (_,p)=>`${p}${s.slide2.tag}`);
+      replaceNth(/(<h2 class="h-content edit">)([\s\S]*?)(<\/h2>)/g, 1, (_,a,b,c)=>`${a}${s.slide2.heading}${c}`);
+      replaceNth(/(<p class="p-body edit">)[^<]*/g,     1, (_,p)=>`${p}${s.slide2.body}`);
+      replaceNth(/(<span class="tt edit">)([\s\S]*?)(<\/span>)/g, 1, (_,a,b,c)=>`${a}${s.slide2.tip}${c}`);
+    }
+    // SLIDE 3
+    if(s.slide3) {
+      replaceNth(/(<div class="tag edit">)[^<]*/g,       2, (_,p)=>`${p}${s.slide3.tag}`);
+      replaceNth(/(<h2 class="h-content edit">)([\s\S]*?)(<\/h2>)/g, 2, (_,a,b,c)=>`${a}${s.slide3.heading}${c}`);
+      replaceNth(/(<p class="p-body edit">)[^<]*/g,     2, (_,p)=>`${p}${s.slide3.body}`);
+    }
+    // SLIDE 4 stats
+    if(s.slide4) {
+      replaceNth(/(<div class="tag edit">)[^<]*/g,       3, (_,p)=>`${p}${s.slide4.tag}`);
+      replaceNth(/(<h2 class="h-content edit">)([\s\S]*?)(<\/h2>)/g, 3, (_,a,b,c)=>`${a}${s.slide4.heading}${c}`);
+      if(s.slide4.stats) {
+        s.slide4.stats.forEach((st,i)=>{
+          replaceNth(/(<div class="num edit">)[^<]*/g, i+1, (_,p)=>`${p}${st.num}`);
+          replaceNth(/(<div class="lab edit">)[^<]*/g, i+1, (_,p)=>`${p}${st.label}`);
+        });
+      }
+    }
+    // SLIDE 5
+    if(s.slide5) {
+      replaceNth(/(<div class="tag edit">)[^<]*/g,       4, (_,p)=>`${p}${s.slide5.tag}`);
+      replaceNth(/(<h2 class="h-content edit">)([\s\S]*?)(<\/h2>)/g, 4, (_,a,b,c)=>`${a}${s.slide5.heading}${c}`);
+      replaceNth(/(<p class="p-body edit">)[^<]*/g,     3, (_,p)=>`${p}${s.slide5.body}`);
+    }
+    // SLIDE 6
+    if(s.slide6) {
+      replaceNth(/(<div class="tag edit">)[^<]*/g,       5, (_,p)=>`${p}${s.slide6.tag}`);
+      replaceNth(/(<h2 class="h-content edit">)([\s\S]*?)(<\/h2>)/g, 5, (_,a,b,c)=>`${a}${s.slide6.heading}${c}`);
+      replaceNth(/(<p class="p-body edit">)[^<]*/g,     4, (_,p)=>`${p}${s.slide6.body}`);
+      replaceNth(/(<span class="tt edit">)([\s\S]*?)(<\/span>)/g, 2, (_,a,b,c)=>`${a}${s.slide6.tip}${c}`);
+    }
+    // SLIDE 7 CTA
+    if(s.slide7) {
+      replaceNth(/(<div class="eyebrow edit">)[^<]*/g,  2, (_,p)=>`${p}${s.slide7.eyebrow}`);
+      replaceNth(/(<h1 class="edit">)([\s\S]*?)(<\/h1>)/g, 2, (_,a,b,c)=>`${a}${s.slide7.headline}${c}`);
+      replaceNth(/(<div class="sub edit">)[^<]*/g,      2, (_,p)=>`${p}${s.slide7.sub}`);
+      r = r.replace(/(<span class="edit" style="display:inline">)[^<]*/,`$1${s.slide7.pill}`);
+      r = r.replace(/(<div class="handle edit">)[^<]*/,`$1${s.slide7.handle}`);
+    }
+    return r;
+  }
+
+  function renderCarousel(s) {
+    let html = injectSlides(tplHTML, s);
+    if(format==='4:5') html = html.replace('--sh:1080px','--sh:1350px');
+
+    const frame = document.getElementById('slideFrame');
+    const wrap  = document.getElementById('carouselWrap');
+    document.getElementById('emptyState').style.display  = 'none';
+    document.getElementById('skeleton').style.display    = 'none';
+    wrap.style.display = 'flex';
+
+    frame.srcdoc = html;
+    frame.onload = () => {
+      try {
+        const h = frame.contentDocument.body.scrollHeight;
+        frame.style.height = h + 'px';
+      } catch(e) { frame.style.height = '9000px'; }
+    };
+  }
+
+  function downloadHTML() {
+    if(!slides||!tplHTML) return;
+    let html = injectSlides(tplHTML, slides);
+    if(format==='4:5') html = html.replace('--sh:1080px','--sh:1350px');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([html],{type:'text/html'}));
+    a.download = `PTW_Carrusel_${Date.now()}.html`;
+    a.click();
+  }
+
+  document.getElementById('promptInput').addEventListener('keydown', e=>{
+    if(e.key==='Enter' && (e.metaKey||e.ctrlKey)) generate();
+  });
+</script>
+</body>
+</html>
