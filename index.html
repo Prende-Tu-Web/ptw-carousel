@@ -154,7 +154,7 @@ header {
   margin-bottom: 5px;
   letter-spacing: .02em;
 }
-textarea, input[type="text"] {
+textarea, input[type="text"], input[type="number"] {
   width: 100%;
   background: var(--light);
   border: 1.5px solid var(--border);
@@ -168,13 +168,73 @@ textarea, input[type="text"] {
   transition: border-color .2s, box-shadow .2s;
 }
 textarea { resize: none; }
-textarea:focus, input[type="text"]:focus {
+textarea:focus, input[type="text"]:focus, input[type="number"]:focus {
   border-color: var(--coral);
   box-shadow: 0 0 0 3px rgba(255,99,143,.1);
 }
 textarea::placeholder, input::placeholder {
   color: rgba(107,112,119,.45);
 }
+
+/* slides count row */
+.slides-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.slides-row input[type="number"] {
+  width: 72px;
+  flex-shrink: 0;
+  text-align: center;
+  -moz-appearance: textfield;
+}
+.slides-row input[type="number"]::-webkit-inner-spin-button,
+.slides-row input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
+.slides-hint {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+/* reference upload */
+.upload-zone {
+  border: 1.5px dashed var(--border);
+  border-radius: 10px;
+  padding: 14px 12px;
+  cursor: pointer;
+  transition: all .2s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--light);
+}
+.upload-zone:hover {
+  border-color: rgba(255,99,143,.4);
+  background: #fff5f8;
+}
+.upload-zone.has-file {
+  border-color: var(--coral);
+  background: #fff0f4;
+}
+.upload-icon { font-size: 1.3rem; flex-shrink: 0; }
+.upload-text { font-size: 12px; color: var(--muted); line-height: 1.35; }
+.upload-text strong { color: var(--dark); display: block; font-size: 11.5px; font-weight: 600; }
+.upload-text .fname { color: var(--coral); font-weight: 600; font-size: 11px; }
+.upload-clear {
+  margin-left: auto;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1;
+  padding: 2px 4px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  transition: color .15s;
+}
+.upload-clear:hover { color: var(--coral); }
+#refInput { display: none; }
 
 /* example chips */
 .chips {
@@ -254,14 +314,6 @@ textarea::placeholder, input::placeholder {
 .loading .btn-label { display: none; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-.cost-hint {
-  font-size: 11px;
-  color: var(--muted);
-  text-align: center;
-  margin-top: 7px;
-}
-.cost-hint strong { color: var(--coral); font-weight: 600; }
-
 /* status */
 .status {
   margin-top: 10px;
@@ -323,7 +375,7 @@ textarea::placeholder, input::placeholder {
   letter-spacing: .1em;
   text-transform: uppercase;
 }
-.prev-actions { display: flex; gap: 6px; }
+.prev-actions { display: flex; gap: 6px; flex-wrap: wrap; }
 .prev-btn {
   padding: 5px 13px;
   border-radius: 100px;
@@ -341,6 +393,16 @@ textarea::placeholder, input::placeholder {
 .prev-btn.on {
   background: var(--coral);
   border-color: var(--coral);
+  color: #fff;
+}
+.prev-btn.pdf-btn {
+  background: var(--dark);
+  border-color: var(--dark);
+  color: #fff;
+}
+.prev-btn.pdf-btn:hover {
+  background: #1f2e30;
+  border-color: #1f2e30;
   color: #fff;
 }
 
@@ -427,6 +489,15 @@ textarea::placeholder, input::placeholder {
       </div>
     </div>
 
+    <!-- Slides -->
+    <div class="panel-block">
+      <div class="block-label">Cantidad de slides</div>
+      <div class="slides-row">
+        <input type="number" id="slideCount" value="7" min="3" max="20">
+        <span class="slides-hint">Incluye portada y CTA. Ajusta libremente según el tema.</span>
+      </div>
+    </div>
+
     <!-- Tema -->
     <div class="panel-block">
       <div class="block-label">Tema del carrusel</div>
@@ -439,6 +510,19 @@ textarea::placeholder, input::placeholder {
         <label>URL de referencia (opcional)</label>
         <input type="text" id="urlInput"
           placeholder="https://prendetuweb.cl/blog/mi-post">
+      </div>
+    </div>
+
+    <!-- Imagen de referencia -->
+    <div class="panel-block">
+      <div class="block-label">Imagen de referencia <span style="opacity:.5;font-weight:400;letter-spacing:0;text-transform:none;font-size:10px;">— opcional</span></div>
+      <input type="file" id="refInput" accept="image/*">
+      <div class="upload-zone" id="uploadZone" onclick="document.getElementById('refInput').click()">
+        <span class="upload-icon">🖼️</span>
+        <div class="upload-text">
+          <strong>Sube una imagen de referencia</strong>
+          Claude la analiza para adaptar el tono y estilo del contenido
+        </div>
       </div>
     </div>
 
@@ -460,7 +544,6 @@ textarea::placeholder, input::placeholder {
         <div class="spin" id="spinner"></div>
         <span class="btn-label">✨ Generar carrusel</span>
       </button>
-      <p class="cost-hint">~<strong>$20 pesos</strong> por carrusel generado</p>
       <div class="status" id="statusMsg"></div>
     </div>
 
@@ -483,11 +566,12 @@ textarea::placeholder, input::placeholder {
 
     <div id="carouselWrap">
       <div class="prev-bar">
-        <span class="prev-title">Preview — 7 slides</span>
+        <span class="prev-title" id="prevTitle">Preview — 7 slides</span>
         <div class="prev-actions">
           <button class="prev-btn on" id="btn11" onclick="setFormat('1:1',this)">1:1</button>
           <button class="prev-btn" id="btn45" onclick="setFormat('4:5',this)">4:5</button>
-          <button class="prev-btn" onclick="downloadHTML()">⬇ Descargar</button>
+          <button class="prev-btn" onclick="downloadHTML()">⬇ HTML</button>
+          <button class="prev-btn pdf-btn" onclick="exportPDF()">⬇ PDF</button>
         </div>
       </div>
       <iframe id="slideFrame" scrolling="no"></iframe>
@@ -497,31 +581,39 @@ textarea::placeholder, input::placeholder {
 </div>
 
 <script>
-  let platform = 'instagram';
-  let format   = '1:1';
-  let slides   = null;
-  let tplHTML  = null;
+  let platform    = 'instagram';
+  let format      = '1:1';
+  let slides      = null;
+  let tplHTML     = null;
+  let refImageB64 = null;
+  let refMime     = null;
 
   fetch('/template.html').then(r=>r.text()).then(h=>{ tplHTML=h; }).catch(()=>{});
 
+  /* ── Platform ── */
   function setPlatform(btn) {
     document.querySelectorAll('.plat-btn').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
     platform = btn.dataset.plat;
   }
 
+  /* ── Example chips ── */
   function useExample(btn) {
     document.getElementById('promptInput').value = btn.textContent.trim();
     document.getElementById('promptInput').focus();
   }
 
+  /* ── Format toggle ── */
   function setFormat(fmt, btn) {
     format = fmt;
     document.querySelectorAll('.prev-btn').forEach(b=>b.classList.remove('on'));
     btn.classList.add('on');
+    // restore pdf-btn style
+    document.querySelector('.pdf-btn').classList.remove('on');
     if (slides) renderCarousel(slides);
   }
 
+  /* ── Status ── */
   function setStatus(msg, type) {
     const el = document.getElementById('statusMsg');
     el.textContent = msg;
@@ -531,6 +623,7 @@ textarea::placeholder, input::placeholder {
     document.getElementById('statusMsg').className = 'status';
   }
 
+  /* ── Loading state ── */
   function setLoading(on) {
     const btn = document.getElementById('genBtn');
     btn.disabled = on;
@@ -540,8 +633,53 @@ textarea::placeholder, input::placeholder {
     if (on) document.getElementById('carouselWrap').style.display = 'none';
   }
 
+  /* ── Reference image upload ── */
+  document.getElementById('refInput').addEventListener('change', function() {
+    const file = this.files[0];
+    const zone = document.getElementById('uploadZone');
+    if (!file) {
+      refImageB64 = null; refMime = null;
+      zone.classList.remove('has-file');
+      zone.innerHTML = `<span class="upload-icon">🖼️</span>
+        <div class="upload-text">
+          <strong>Sube una imagen de referencia</strong>
+          Claude la analiza para adaptar el tono y estilo del contenido
+        </div>`;
+      return;
+    }
+    refMime = file.type;
+    const reader = new FileReader();
+    reader.onload = e => {
+      refImageB64 = e.target.result.split(',')[1];
+      zone.classList.add('has-file');
+      const shortName = file.name.length > 28 ? file.name.slice(0,25)+'…' : file.name;
+      zone.innerHTML = `<span class="upload-icon">✅</span>
+        <div class="upload-text">
+          <strong>Imagen cargada</strong>
+          <span class="fname">${shortName}</span>
+        </div>
+        <button class="upload-clear" onclick="clearRef(event)" title="Quitar imagen">×</button>`;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  function clearRef(e) {
+    e.stopPropagation();
+    refImageB64 = null; refMime = null;
+    document.getElementById('refInput').value = '';
+    const zone = document.getElementById('uploadZone');
+    zone.classList.remove('has-file');
+    zone.innerHTML = `<span class="upload-icon">🖼️</span>
+      <div class="upload-text">
+        <strong>Sube una imagen de referencia</strong>
+        Claude la analiza para adaptar el tono y estilo del contenido
+      </div>`;
+  }
+
+  /* ── Generate ── */
   async function generate() {
-    const prompt = document.getElementById('promptInput').value.trim();
+    const prompt     = document.getElementById('promptInput').value.trim();
+    const slideCount = parseInt(document.getElementById('slideCount').value) || 7;
     if (!prompt) { setStatus('Por favor escribe el tema del carrusel', 'err'); return; }
     if (!tplHTML) { setStatus('Template cargando, intenta en un segundo', 'err'); return; }
     clearStatus();
@@ -549,20 +687,29 @@ textarea::placeholder, input::placeholder {
     document.getElementById('emptyState').style.display = 'none';
 
     try {
+      const body = {
+        prompt,
+        platform,
+        slideCount,
+        topic: document.getElementById('urlInput').value.trim() || null
+      };
+      if (refImageB64) {
+        body.refImage = refImageB64;
+        body.refMime  = refMime;
+      }
+
       const res = await fetch('/api/generate', {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({
-          prompt,
-          platform,
-          topic: document.getElementById('urlInput').value.trim() || null
-        })
+        body: JSON.stringify(body)
       });
       const data = await res.json();
       if (!res.ok || data.error) throw new Error(data.error || 'Error desconocido');
       slides = data.slides;
+      const count = Object.keys(slides).length;
+      document.getElementById('prevTitle').textContent = `Preview — ${count} slides`;
       renderCarousel(data.slides);
-      setStatus('✓ Carrusel generado exitosamente', 'ok');
+      setStatus(`✓ Carrusel generado — ${count} slides`, 'ok');
     } catch(err) {
       setStatus(`Error: ${err.message}`, 'err');
       document.getElementById('emptyState').style.display = 'flex';
@@ -571,77 +718,82 @@ textarea::placeholder, input::placeholder {
     }
   }
 
+  /* ── Inject slides into template ── */
   function injectSlides(html, s) {
     let r = html;
-    const nth = (pattern, n, repl) => {
-      let i=0;
-      return r.replace(pattern, (m,...args)=>{ i++; return i===n ? repl(m,...args) : m; });
-    };
 
-    // SLIDE 1
-    if(s.slide1) {
-      r = r.replace(/(<div class="eyebrow edit">)[^<]*/,         `$1${s.slide1.eyebrow}`);
-      const hl = s.slide1.headline.replace(/\[([^\]]+)\]/,'<span class="c">$1</span>');
-      r = r.replace(/(<h1 class="edit">)([\s\S]*?)(<\/h1>)/, (_,a,b,c,idx)=> {
-        // only first h1
-        return `${a}${hl}${c}`;
-      });
-      r = nth(/(<div class="sub edit">)[^<]*/g, 1, (_,p1)=>`${p1}${s.slide1.sub}`);
-    }
-
-    // Helper: replace nth occurrence of a pattern
     const replaceNth = (pat, n, fn) => {
       let i=0; r = r.replace(pat,(m,...a)=>{ i++; return i===n?fn(m,...a):m; });
     };
 
-    // SLIDE 2
-    if(s.slide2) {
-      replaceNth(/(<div class="tag edit">)[^<]*/g,       1, (_,p)=>`${p}${s.slide2.tag}`);
-      replaceNth(/(<h2 class="h-content edit">)([\s\S]*?)(<\/h2>)/g, 1, (_,a,b,c)=>`${a}${s.slide2.heading}${c}`);
-      replaceNth(/(<p class="p-body edit">)[^<]*/g,     1, (_,p)=>`${p}${s.slide2.body}`);
-      replaceNth(/(<span class="tt edit">)([\s\S]*?)(<\/span>)/g, 1, (_,a,b,c)=>`${a}${s.slide2.tip}${c}`);
+    // SLIDE 1
+    if(s.slide1) {
+      r = r.replace(/(<div class="eyebrow edit">)[^<]*/,`$1${s.slide1.eyebrow}`);
+      const hl = s.slide1.headline.replace(/\[([^\]]+)\]/,'<span class="c">$1</span>');
+      let h1count=0;
+      r = r.replace(/(<h1 class="edit">)([\s\S]*?)(<\/h1>)/g, (m,a,b,c)=>{
+        h1count++;
+        return h1count===1 ? `${a}${hl}${c}` : m;
+      });
+      replaceNth(/(<div class="sub edit">)[^<]*/g, 1, (_,p1)=>`${p1}${s.slide1.sub}`);
     }
-    // SLIDE 3
-    if(s.slide3) {
-      replaceNth(/(<div class="tag edit">)[^<]*/g,       2, (_,p)=>`${p}${s.slide3.tag}`);
-      replaceNth(/(<h2 class="h-content edit">)([\s\S]*?)(<\/h2>)/g, 2, (_,a,b,c)=>`${a}${s.slide3.heading}${c}`);
-      replaceNth(/(<p class="p-body edit">)[^<]*/g,     2, (_,p)=>`${p}${s.slide3.body}`);
-    }
-    // SLIDE 4 stats
-    if(s.slide4) {
-      replaceNth(/(<div class="tag edit">)[^<]*/g,       3, (_,p)=>`${p}${s.slide4.tag}`);
-      replaceNth(/(<h2 class="h-content edit">)([\s\S]*?)(<\/h2>)/g, 3, (_,a,b,c)=>`${a}${s.slide4.heading}${c}`);
-      if(s.slide4.stats) {
-        s.slide4.stats.forEach((st,i)=>{
-          replaceNth(/(<div class="num edit">)[^<]*/g, i+1, (_,p)=>`${p}${st.num}`);
-          replaceNth(/(<div class="lab edit">)[^<]*/g, i+1, (_,p)=>`${p}${st.label}`);
+
+    // Middle slides (slide2 … slideN-1) — injected by key order
+    const keys = Object.keys(s).filter(k=>k!=='slide1' && k!==`slide${Object.keys(s).length}`);
+    let tagIdx=0, headIdx=0, bodyIdx=0, tipIdx=0, numIdx=0, labIdx=0;
+
+    // Pre-count occurrences in slide1 to offset correctly
+    // (slide1 uses eyebrow/h1/sub, not tag/h2/p-body so counters start at 0 for middle slides)
+
+    keys.forEach(key => {
+      const sl = s[key];
+      if (!sl) return;
+
+      if (sl.tag !== undefined) {
+        tagIdx++;
+        replaceNth(/(<div class="tag edit">)[^<]*/g, tagIdx, (_,p)=>`${p}${sl.tag}`);
+      }
+      if (sl.heading !== undefined) {
+        headIdx++;
+        replaceNth(/(<h2 class="h-content edit">)([\s\S]*?)(<\/h2>)/g, headIdx, (_,a,b,c)=>`${a}${sl.heading}${c}`);
+      }
+      if (sl.body !== undefined) {
+        bodyIdx++;
+        replaceNth(/(<p class="p-body edit">)[^<]*/g, bodyIdx, (_,p)=>`${p}${sl.body}`);
+      }
+      if (sl.tip !== undefined) {
+        tipIdx++;
+        replaceNth(/(<span class="tt edit">)([\s\S]*?)(<\/span>)/g, tipIdx, (_,a,b,c)=>`${a}${sl.tip}${c}`);
+      }
+      if (sl.stats) {
+        sl.stats.forEach(st => {
+          numIdx++;
+          labIdx++;
+          replaceNth(/(<div class="num edit">)[^<]*/g, numIdx, (_,p)=>`${p}${st.num}`);
+          replaceNth(/(<div class="lab edit">)[^<]*/g, labIdx, (_,p)=>`${p}${st.label}`);
         });
       }
+    });
+
+    // LAST SLIDE — CTA
+    const lastKey = `slide${Object.keys(s).length}`;
+    const cta = s[lastKey];
+    if (cta) {
+      replaceNth(/(<div class="eyebrow edit">)[^<]*/g, 2, (_,p)=>`${p}${cta.eyebrow}`);
+      let h1c2=0;
+      r = r.replace(/(<h1 class="edit">)([\s\S]*?)(<\/h1>)/g, (m,a,b,c)=>{
+        h1c2++;
+        return h1c2===2 ? `${a}${cta.headline}${c}` : m;
+      });
+      replaceNth(/(<div class="sub edit">)[^<]*/g, 2, (_,p)=>`${p}${cta.sub}`);
+      if (cta.pill) r = r.replace(/(<span class="edit" style="display:inline">)[^<]*/,`$1${cta.pill}`);
+      if (cta.handle) r = r.replace(/(<div class="handle edit">)[^<]*/,`$1${cta.handle}`);
     }
-    // SLIDE 5
-    if(s.slide5) {
-      replaceNth(/(<div class="tag edit">)[^<]*/g,       4, (_,p)=>`${p}${s.slide5.tag}`);
-      replaceNth(/(<h2 class="h-content edit">)([\s\S]*?)(<\/h2>)/g, 4, (_,a,b,c)=>`${a}${s.slide5.heading}${c}`);
-      replaceNth(/(<p class="p-body edit">)[^<]*/g,     3, (_,p)=>`${p}${s.slide5.body}`);
-    }
-    // SLIDE 6
-    if(s.slide6) {
-      replaceNth(/(<div class="tag edit">)[^<]*/g,       5, (_,p)=>`${p}${s.slide6.tag}`);
-      replaceNth(/(<h2 class="h-content edit">)([\s\S]*?)(<\/h2>)/g, 5, (_,a,b,c)=>`${a}${s.slide6.heading}${c}`);
-      replaceNth(/(<p class="p-body edit">)[^<]*/g,     4, (_,p)=>`${p}${s.slide6.body}`);
-      replaceNth(/(<span class="tt edit">)([\s\S]*?)(<\/span>)/g, 2, (_,a,b,c)=>`${a}${s.slide6.tip}${c}`);
-    }
-    // SLIDE 7 CTA
-    if(s.slide7) {
-      replaceNth(/(<div class="eyebrow edit">)[^<]*/g,  2, (_,p)=>`${p}${s.slide7.eyebrow}`);
-      replaceNth(/(<h1 class="edit">)([\s\S]*?)(<\/h1>)/g, 2, (_,a,b,c)=>`${a}${s.slide7.headline}${c}`);
-      replaceNth(/(<div class="sub edit">)[^<]*/g,      2, (_,p)=>`${p}${s.slide7.sub}`);
-      r = r.replace(/(<span class="edit" style="display:inline">)[^<]*/,`$1${s.slide7.pill}`);
-      r = r.replace(/(<div class="handle edit">)[^<]*/,`$1${s.slide7.handle}`);
-    }
+
     return r;
   }
 
+  /* ── Render carousel ── */
   function renderCarousel(s) {
     let html = injectSlides(tplHTML, s);
     if(format==='4:5') html = html.replace('--sh:1080px','--sh:1350px');
@@ -661,6 +813,7 @@ textarea::placeholder, input::placeholder {
     };
   }
 
+  /* ── Download HTML ── */
   function downloadHTML() {
     if(!slides||!tplHTML) return;
     let html = injectSlides(tplHTML, slides);
@@ -671,6 +824,63 @@ textarea::placeholder, input::placeholder {
     a.click();
   }
 
+  /* ── Export PDF ── */
+  function exportPDF() {
+    if(!slides||!tplHTML) return;
+    let html = injectSlides(tplHTML, slides);
+    const slideH = format==='4:5' ? 1350 : 1080;
+    if(format==='4:5') html = html.replace('--sh:1080px','--sh:1350px');
+
+    // Inject print CSS into the template before opening
+    const printCSS = `
+<style id="ptw-print">
+@page {
+  size: 1080px ${slideH}px;
+  margin: 0;
+}
+@media print {
+  html, body {
+    width: 1080px;
+    background: transparent !important;
+    padding: 0 !important;
+  }
+  .topbar { display: none !important; }
+  body > .deck { padding: 0 !important; gap: 0 !important; }
+  .unit { page-break-after: always; break-after: page; }
+  .unit:last-child { page-break-after: avoid; break-after: avoid; }
+  .slabel { display: none !important; }
+  .frame {
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    width: 1080px !important;
+    height: ${slideH}px !important;
+  }
+  .slide {
+    transform: none !important;
+    position: relative !important;
+    width: 1080px !important;
+    height: ${slideH}px !important;
+    border-radius: 0 !important;
+  }
+}
+</style>`;
+
+    const injected = html.replace('</head>', printCSS + '</head>');
+    const win = window.open('', '_blank', 'width=1080,height=800');
+    win.document.open();
+    win.document.write(injected);
+    win.document.close();
+
+    // Wait for fonts + layout, then print
+    win.onload = () => {
+      setTimeout(() => {
+        win.focus();
+        win.print();
+      }, 1200);
+    };
+  }
+
+  /* ── Keyboard shortcut ── */
   document.getElementById('promptInput').addEventListener('keydown', e=>{
     if(e.key==='Enter' && (e.metaKey||e.ctrlKey)) generate();
   });
