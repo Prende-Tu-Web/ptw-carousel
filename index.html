@@ -494,7 +494,7 @@ textarea::placeholder, input::placeholder {
       <div class="block-label">Cantidad de slides</div>
       <div class="slides-row">
         <input type="number" id="slideCount" value="7" min="3" max="20">
-        <span class="slides-hint">Incluye portada y CTA. Ajusta libremente según el tema.</span>
+        <span class="slides-hint">Incluye portada y CTA. Entre 3 y 20 slides.</span>
       </div>
     </div>
 
@@ -566,7 +566,7 @@ textarea::placeholder, input::placeholder {
 
     <div id="carouselWrap">
       <div class="prev-bar">
-        <span class="prev-title" id="prevTitle">Preview — 7 slides</span>
+        <span class="prev-title" id="prevTitle">Preview</span>
         <div class="prev-actions">
           <button class="prev-btn on" id="btn11" onclick="setFormat('1:1',this)">1:1</button>
           <button class="prev-btn" id="btn45" onclick="setFormat('4:5',this)">4:5</button>
@@ -583,7 +583,8 @@ textarea::placeholder, input::placeholder {
 <script>
   let platform    = 'instagram';
   let format      = '1:1';
-  let slides      = null;
+  let slides      = null;   // Array of slide objects
+  let design      = null;   // Color palette from image analysis
   let tplHTML     = null;
   let refImageB64 = null;
   let refMime     = null;
@@ -608,7 +609,6 @@ textarea::placeholder, input::placeholder {
     format = fmt;
     document.querySelectorAll('.prev-btn').forEach(b=>b.classList.remove('on'));
     btn.classList.add('on');
-    // restore pdf-btn style
     document.querySelector('.pdf-btn').classList.remove('on');
     if (slides) renderCarousel(slides);
   }
@@ -665,7 +665,7 @@ textarea::placeholder, input::placeholder {
 
   function clearRef(e) {
     e.stopPropagation();
-    refImageB64 = null; refMime = null;
+    refImageB64 = null; refMime = null; design = null;
     document.getElementById('refInput').value = '';
     const zone = document.getElementById('uploadZone');
     zone.classList.remove('has-file');
@@ -674,6 +674,159 @@ textarea::placeholder, input::placeholder {
         <strong>Sube una imagen de referencia</strong>
         Claude la analiza para adaptar el tono y estilo del contenido
       </div>`;
+  }
+
+  /* ═══════════════════════════════════════════════
+     SLIDE HTML GENERATORS — dynamic rendering
+     ═══════════════════════════════════════════════ */
+
+  /* Escape HTML entities */
+  function esc(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  /* Allow only <b> tags (for tip bold highlights) */
+  function rich(s) {
+    return String(s||'')
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/&lt;b&gt;/gi,'<b>').replace(/&lt;\/b&gt;/gi,'</b>');
+  }
+
+  /* Convert [word] to <span class="c">word</span> for cover headline */
+  function hl(s) {
+    return esc(s).replace(/\[([^\]]+)\]/,'<span class="c">$1</span>');
+  }
+
+  const MARK  = `<div class="mark"><span class="franjas"><i></i><i></i><i></i></span></div>`;
+  const BRAND = `<div class="bar">
+      <div class="logo"><span class="cat" data-cat></span><span>Prende Tu <b>Web</b></span></div>
+      <div class="url">prendetuweb.cl</div>
+    </div>`;
+
+  function slideCover(s, n) {
+    return `<div class="unit">
+  <div class="slabel"><span class="n">${n}</span> Portada · Cover</div>
+  <div class="frame">
+    <div class="slide dark cover">
+      <div class="dots"></div><div class="glow"></div>
+      <span class="particle p1"></span><span class="particle p2"></span>
+      <span class="particle p3"></span><span class="particle p4"></span><span class="particle p5"></span>
+      ${MARK}
+      <div class="body">
+        <div class="eyebrow edit">${esc(s.eyebrow)}</div>
+        <h1 class="edit">${hl(s.headline)}</h1>
+        <div class="sub edit">${esc(s.sub)}</div>
+      </div>
+      <div class="swipe"><span>Desliza</span><span class="arw">→</span></div>
+      ${BRAND}
+    </div>
+  </div>
+</div>`;
+  }
+
+  function slideContent(s, n, contentN) {
+    const theme  = s.theme || (contentN % 2 === 0 ? 'dark' : 'light');
+    const numStr = String(contentN).padStart(2,'0');
+    const side   = contentN % 2 === 0 ? 'left:-20px;top:120px;' : 'right:-30px;bottom:60px;';
+    const tipHTML = s.tip ? `<div class="tip">
+          <span class="ico">💡</span>
+          <span class="tt edit">${rich(s.tip)}</span>
+        </div>` : '';
+    return `<div class="unit">
+  <div class="slabel"><span class="n">${n}</span> Slide ${numStr}</div>
+  <div class="frame">
+    <div class="slide ${theme}">
+      <div class="bignum" style="font-size:480px;${side}">${numStr}</div>
+      ${MARK}
+      <div class="body">
+        <div class="tag edit">${esc(s.tag)}</div>
+        <h2 class="h-content edit">${esc(s.heading)}</h2>
+        <p class="p-body edit">${esc(s.body)}</p>
+        ${tipHTML}
+      </div>
+      ${BRAND}
+    </div>
+  </div>
+</div>`;
+  }
+
+  function slideStats(s, n) {
+    const statsHTML = (s.stats||[]).slice(0,4).map(st =>
+      `<div class="stat">
+          <div class="num edit">${esc(st.num)}</div>
+          <div class="lab edit">${esc(st.label)}</div>
+        </div>`
+    ).join('');
+    return `<div class="unit">
+  <div class="slabel"><span class="n">${n}</span> Estadísticas</div>
+  <div class="frame">
+    <div class="slide light">
+      ${MARK}
+      <div class="body">
+        <div class="stats-head">
+          <div class="tag edit">${esc(s.tag)}</div>
+          <h2 class="h-content edit">${esc(s.heading)}</h2>
+        </div>
+        <div class="grid2">${statsHTML}</div>
+      </div>
+      ${BRAND}
+    </div>
+  </div>
+</div>`;
+  }
+
+  function slideCTA(s, n) {
+    return `<div class="unit">
+  <div class="slabel"><span class="n">${n}</span> Cierre · CTA</div>
+  <div class="frame">
+    <div class="slide coral cta">
+      <div class="dots"></div>
+      ${MARK}
+      <div class="body">
+        <div class="eyebrow edit">${esc(s.eyebrow)}</div>
+        <h1 class="edit">${esc(s.headline)}</h1>
+        <div class="sub edit">${esc(s.sub)}</div>
+        <div class="pill"><span class="edit" style="display:inline">${esc(s.pill)}</span><span class="arw">→</span></div>
+        <div class="handle edit">${esc(s.handle||'@prendetuweb.cl')}</div>
+      </div>
+      ${BRAND}
+    </div>
+  </div>
+</div>`;
+  }
+
+  /* Validate hex color */
+  function isHex(c) { return /^#[0-9a-f]{6}$/i.test(c); }
+
+  /* Build full carousel HTML from slide array */
+  function buildCarouselHTML(slidesArr) {
+    let contentIdx = 0;
+    const units = slidesArr.map((s, i) => {
+      const n = i + 1;
+      if (s.type === 'cover') return slideCover(s, n);
+      if (s.type === 'cta')   return slideCTA(s, n);
+      if (s.type === 'stats') return slideStats(s, n);
+      contentIdx++;
+      return slideContent(s, n, contentIdx);
+    }).join('\n');
+
+    let html = tplHTML.replace('<!--SLIDES-->', units);
+
+    // Inject custom color palette if present (from image analysis)
+    if (design) {
+      const dark  = isHex(design.dark)  ? design.dark  : '#111a1b';
+      const light = isHex(design.light) ? design.light : '#f1eff4';
+      const muted = isHex(design.muted) ? design.muted : '#6b7077';
+      const overrides = `<style>:root{--dark:${dark};--light:${light};--muted:${muted};}</style>`;
+      html = html.replace('</head>', overrides + '</head>');
+    }
+
+    if (format === '4:5') {
+      html = html.replace('--sh:1080px','--sh:1350px');
+      html = html.replace('data-r="11" class="on"','data-r="11"');
+      html = html.replace('data-r="45"','data-r="45" class="on"');
+    }
+    return html;
   }
 
   /* ── Generate ── */
@@ -705,11 +858,14 @@ textarea::placeholder, input::placeholder {
       });
       const data = await res.json();
       if (!res.ok || data.error) throw new Error(data.error || 'Error desconocido');
-      slides = data.slides;
-      const count = Object.keys(slides).length;
+
+      slides = data.slides;  // array
+      design = data.design || null;
+      const count = slides.length;
       document.getElementById('prevTitle').textContent = `Preview — ${count} slides`;
-      renderCarousel(data.slides);
-      setStatus(`✓ Carrusel generado — ${count} slides`, 'ok');
+      renderCarousel(slides);
+      const paletteNote = design ? ' · paleta personalizada aplicada' : '';
+      setStatus(`✓ Carrusel generado — ${count} slides${paletteNote}`, 'ok');
     } catch(err) {
       setStatus(`Error: ${err.message}`, 'err');
       document.getElementById('emptyState').style.display = 'flex';
@@ -718,90 +874,13 @@ textarea::placeholder, input::placeholder {
     }
   }
 
-  /* ── Inject slides into template ── */
-  function injectSlides(html, s) {
-    let r = html;
-
-    const replaceNth = (pat, n, fn) => {
-      let i=0; r = r.replace(pat,(m,...a)=>{ i++; return i===n?fn(m,...a):m; });
-    };
-
-    // SLIDE 1
-    if(s.slide1) {
-      r = r.replace(/(<div class="eyebrow edit">)[^<]*/,`$1${s.slide1.eyebrow}`);
-      const hl = s.slide1.headline.replace(/\[([^\]]+)\]/,'<span class="c">$1</span>');
-      let h1count=0;
-      r = r.replace(/(<h1 class="edit">)([\s\S]*?)(<\/h1>)/g, (m,a,b,c)=>{
-        h1count++;
-        return h1count===1 ? `${a}${hl}${c}` : m;
-      });
-      replaceNth(/(<div class="sub edit">)[^<]*/g, 1, (_,p1)=>`${p1}${s.slide1.sub}`);
-    }
-
-    // Middle slides (slide2 … slideN-1) — injected by key order
-    const keys = Object.keys(s).filter(k=>k!=='slide1' && k!==`slide${Object.keys(s).length}`);
-    let tagIdx=0, headIdx=0, bodyIdx=0, tipIdx=0, numIdx=0, labIdx=0;
-
-    // Pre-count occurrences in slide1 to offset correctly
-    // (slide1 uses eyebrow/h1/sub, not tag/h2/p-body so counters start at 0 for middle slides)
-
-    keys.forEach(key => {
-      const sl = s[key];
-      if (!sl) return;
-
-      if (sl.tag !== undefined) {
-        tagIdx++;
-        replaceNth(/(<div class="tag edit">)[^<]*/g, tagIdx, (_,p)=>`${p}${sl.tag}`);
-      }
-      if (sl.heading !== undefined) {
-        headIdx++;
-        replaceNth(/(<h2 class="h-content edit">)([\s\S]*?)(<\/h2>)/g, headIdx, (_,a,b,c)=>`${a}${sl.heading}${c}`);
-      }
-      if (sl.body !== undefined) {
-        bodyIdx++;
-        replaceNth(/(<p class="p-body edit">)[^<]*/g, bodyIdx, (_,p)=>`${p}${sl.body}`);
-      }
-      if (sl.tip !== undefined) {
-        tipIdx++;
-        replaceNth(/(<span class="tt edit">)([\s\S]*?)(<\/span>)/g, tipIdx, (_,a,b,c)=>`${a}${sl.tip}${c}`);
-      }
-      if (sl.stats) {
-        sl.stats.forEach(st => {
-          numIdx++;
-          labIdx++;
-          replaceNth(/(<div class="num edit">)[^<]*/g, numIdx, (_,p)=>`${p}${st.num}`);
-          replaceNth(/(<div class="lab edit">)[^<]*/g, labIdx, (_,p)=>`${p}${st.label}`);
-        });
-      }
-    });
-
-    // LAST SLIDE — CTA
-    const lastKey = `slide${Object.keys(s).length}`;
-    const cta = s[lastKey];
-    if (cta) {
-      replaceNth(/(<div class="eyebrow edit">)[^<]*/g, 2, (_,p)=>`${p}${cta.eyebrow}`);
-      let h1c2=0;
-      r = r.replace(/(<h1 class="edit">)([\s\S]*?)(<\/h1>)/g, (m,a,b,c)=>{
-        h1c2++;
-        return h1c2===2 ? `${a}${cta.headline}${c}` : m;
-      });
-      replaceNth(/(<div class="sub edit">)[^<]*/g, 2, (_,p)=>`${p}${cta.sub}`);
-      if (cta.pill) r = r.replace(/(<span class="edit" style="display:inline">)[^<]*/,`$1${cta.pill}`);
-      if (cta.handle) r = r.replace(/(<div class="handle edit">)[^<]*/,`$1${cta.handle}`);
-    }
-
-    return r;
-  }
-
-  /* ── Render carousel ── */
-  function renderCarousel(s) {
-    let html = injectSlides(tplHTML, s);
-    if(format==='4:5') html = html.replace('--sh:1080px','--sh:1350px');
-
+  /* ── Render carousel into iframe ── */
+  function renderCarousel(slidesArr) {
+    const html  = buildCarouselHTML(slidesArr);
     const frame = document.getElementById('slideFrame');
     const wrap  = document.getElementById('carouselWrap');
-    document.getElementById('emptyState').style.display  = 'none';
-    document.getElementById('skeleton').style.display    = 'none';
+    document.getElementById('emptyState').style.display = 'none';
+    document.getElementById('skeleton').style.display   = 'none';
     wrap.style.display = 'flex';
 
     frame.srcdoc = html;
@@ -815,9 +894,8 @@ textarea::placeholder, input::placeholder {
 
   /* ── Download HTML ── */
   function downloadHTML() {
-    if(!slides||!tplHTML) return;
-    let html = injectSlides(tplHTML, slides);
-    if(format==='4:5') html = html.replace('--sh:1080px','--sh:1350px');
+    if (!slides || !tplHTML) return;
+    const html = buildCarouselHTML(slides);
     const a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob([html],{type:'text/html'}));
     a.download = `PTW_Carrusel_${Date.now()}.html`;
@@ -826,42 +904,22 @@ textarea::placeholder, input::placeholder {
 
   /* ── Export PDF ── */
   function exportPDF() {
-    if(!slides||!tplHTML) return;
-    let html = injectSlides(tplHTML, slides);
-    const slideH = format==='4:5' ? 1350 : 1080;
-    if(format==='4:5') html = html.replace('--sh:1080px','--sh:1350px');
+    if (!slides || !tplHTML) return;
+    const slideH = format === '4:5' ? 1350 : 1080;
+    let html = buildCarouselHTML(slides);
 
-    // Inject print CSS into the template before opening
     const printCSS = `
 <style id="ptw-print">
-@page {
-  size: 1080px ${slideH}px;
-  margin: 0;
-}
+@page { size: 1080px ${slideH}px; margin: 0; }
 @media print {
-  html, body {
-    width: 1080px;
-    background: transparent !important;
-    padding: 0 !important;
-  }
+  html, body { width: 1080px; background: transparent !important; padding: 0 !important; }
   .topbar { display: none !important; }
   body > .deck { padding: 0 !important; gap: 0 !important; }
   .unit { page-break-after: always; break-after: page; }
   .unit:last-child { page-break-after: avoid; break-after: avoid; }
   .slabel { display: none !important; }
-  .frame {
-    box-shadow: none !important;
-    border-radius: 0 !important;
-    width: 1080px !important;
-    height: ${slideH}px !important;
-  }
-  .slide {
-    transform: none !important;
-    position: relative !important;
-    width: 1080px !important;
-    height: ${slideH}px !important;
-    border-radius: 0 !important;
-  }
+  .frame { box-shadow: none !important; border-radius: 0 !important; width: 1080px !important; height: ${slideH}px !important; }
+  .slide { transform: none !important; position: relative !important; width: 1080px !important; height: ${slideH}px !important; border-radius: 0 !important; }
 }
 </style>`;
 
@@ -870,14 +928,7 @@ textarea::placeholder, input::placeholder {
     win.document.open();
     win.document.write(injected);
     win.document.close();
-
-    // Wait for fonts + layout, then print
-    win.onload = () => {
-      setTimeout(() => {
-        win.focus();
-        win.print();
-      }, 1200);
-    };
+    win.onload = () => { setTimeout(() => { win.focus(); win.print(); }, 1200); };
   }
 
   /* ── Keyboard shortcut ── */
