@@ -40,11 +40,11 @@ export default async function handler(req, res) {
             .replace(/\s+/g, ' ')
             .trim()
             .slice(0, 2500);
-          urlContext = `\n\nContenido de la página de referencia (${topic}):\n${text}`;
+          urlContext = `\n\nContenido de la pagina de referencia (${topic}):\n${text}`;
         } else {
           urlContext = `\n\nURL de referencia: ${topic}`;
         }
-      } catch {
+      } catch (e) {
         urlContext = `\n\nURL de referencia: ${topic}`;
       }
     } else {
@@ -53,78 +53,12 @@ export default async function handler(req, res) {
   }
 
   const platName = platform === 'linkedin' ? 'LinkedIn' : 'Instagram';
+  const withImage = !!(refImage && refMime);
 
-  const systemPrompt = `Eres un experto en marketing digital y copywriting para ${platName}, especializado en contenido de alta conversión para la agencia chilena Prende Tu Web (PTW).
+  // Response format changes based on whether there is an image or not
+  const responseFormat = withImage
+    ? `RESPONDE UNICAMENTE con un objeto JSON valido con exactamente dos campos: "design" y "slides". Sin explicaciones, sin texto adicional, sin bloques de codigo markdown.
 
-Tu tarea es generar el contenido para un carrusel de EXACTAMENTE ${n} slides.
-
-RESPONDE ÚNICAMENTE con un JSON array válido. Sin explicaciones, sin texto adicional, sin bloques de código markdown.
-
-El array debe tener EXACTAMENTE ${n} elementos:
-
-━━━ ELEMENTO 0 — type: "cover" (OBLIGATORIO) ━━━
-{
-  "type": "cover",
-  "eyebrow": "categoría breve en mayúsculas (2-5 palabras)",
-  "headline": "titular impactante (máx 9 palabras) con exactamente UNA [palabra] entre corchetes para destacar en coral",
-  "sub": "subtítulo que amplía el titular (máx 22 palabras)"
-}
-
-━━━ ELEMENTOS 1 a ${n - 2} — ${middleCount} slides de contenido ━━━
-Incluye exactamente ${statsCount} slide(s) tipo "stats" y ${contentCount} tipo "content".
-Alterna los temas "light" y "dark" empezando con "light".
-
-Tipo "content":
-{
-  "type": "content",
-  "theme": "light",
-  "tag": "Error 01 / Tip 01 / Paso 01 / Clave 01 (según el tema)",
-  "heading": "título directo y claro (máx 8 palabras)",
-  "body": "explicación concreta y accionable (máx 40 palabras)",
-  "tip": "consejo específico con <b>término clave</b> en negrita — OPCIONAL, solo si aporta valor real"
-}
-
-Tipo "stats":
-{
-  "type": "stats",
-  "tag": "En números / Datos clave / Lo que dicen los datos",
-  "heading": "titular de las estadísticas (máx 7 palabras)",
-  "stats": [
-    {"num": "75%",  "label": "descripción concisa del dato (máx 14 palabras)"},
-    {"num": "3×",   "label": "descripción concisa del dato (máx 14 palabras)"},
-    {"num": "53%",  "label": "descripción concisa del dato (máx 14 palabras)"},
-    {"num": "0.8%", "label": "descripción concisa del dato (máx 14 palabras)"}
-  ]
-}
-
-━━━ ELEMENTO ${n - 1} — type: "cta" (OBLIGATORIO) ━━━
-{
-  "type": "cta",
-  "eyebrow": "llamada a la acción (2-5 palabras)",
-  "headline": "propuesta de valor irresistible (máx 8 palabras)",
-  "sub": "descripción del beneficio o la oferta (máx 22 palabras)",
-  "pill": "texto del botón CTA (3-6 palabras)",
-  "handle": "@prendetuweb.cl"
-}
-
-REGLAS DE ESCRITURA:
-• Tono: directo, cercano, empático. Habla de tú. Sin tecnicismos innecesarios.
-• Titulares: curiosidad, urgencia o beneficio claro. Fáciles de entender a primera vista.
-• Estadísticas: datos reales y verificables del sector digital/marketing.
-• Chile-friendly: usa contexto o referencias chilenas cuando sea relevante.
-• La [palabra] en corchetes de la portada debe ser la más impactante del titular.
-• El campo "tip" es OPCIONAL — inclúyelo solo en algunos slides (no en todos).
-• Plataforma: tono y CTA apropiados para ${platName}.`;
-
-  // When image is provided, add design palette analysis to the prompt
-  const designPrompt = refImage ? `
-
-━━━ ANÁLISIS DE PALETA VISUAL (solo cuando hay imagen) ━━━
-Además del array de slides, devuelve un campo "design" con una paleta inspirada en los colores de la imagen.
-El coral de la marca PTW (#ff638f) SIEMPRE se mantiene fijo — NO lo incluyas en design.
-Solo ajusta los fondos oscuro/claro y el tono del texto secundario.
-
-FORMATO DE RESPUESTA (objeto JSON con dos campos):
 {
   "design": {
     "dark":  "#RRGGBB",
@@ -132,27 +66,91 @@ FORMATO DE RESPUESTA (objeto JSON con dos campos):
     "muted": "#RRGGBB"
   },
   "slides": [ ...array de ${n} slides... ]
+}`
+    : `RESPONDE UNICAMENTE con un JSON array valido. Sin explicaciones, sin texto adicional, sin bloques de codigo markdown.
+
+[ ...array de ${n} slides... ]`;
+
+  const systemPrompt = `Eres un experto en marketing digital y copywriting para ${platName}, especializado en contenido de alta conversion para la agencia chilena Prende Tu Web (PTW).
+
+Tu tarea es generar el contenido para un carrusel de EXACTAMENTE ${n} slides.
+
+${responseFormat}
+
+El array de slides debe tener EXACTAMENTE ${n} elementos:
+
+ELEMENTO 0 - type: "cover" (OBLIGATORIO):
+{
+  "type": "cover",
+  "eyebrow": "categoria breve en mayusculas (2-5 palabras)",
+  "headline": "titular impactante (max 9 palabras) con exactamente UNA [palabra] entre corchetes para destacar en coral",
+  "sub": "subtitulo que amplia el titular (max 22 palabras)"
 }
 
-REGLAS DE CONTRASTE (obligatorio):
-• "dark"  → muy oscuro, luminosidad < 12% (para texto blanco encima). Ej: #0d1117, #1a0f0a, #0a1218
-• "light" → muy claro, luminosidad > 90% (para texto oscuro encima). Ej: #f5f0e8, #eef2f8, #f2f5ef
-• "muted" → legible sobre "light", contraste ≥ 3:1. Tonos medios con el color dominante de la imagen.
-• Extrae la familia cromática dominante y aplícala en versiones extremas (muy oscuro + muy claro).
-• Si la imagen es en blanco y negro, usa grises neutros: dark #111111, light #f5f5f5, muted #6b7077.` : '';
+ELEMENTOS 1 a ${n - 2} - ${middleCount} slides de contenido:
+Incluye exactamente ${statsCount} slide(s) tipo "stats" y ${contentCount} tipo "content".
+Alterna los temas "light" y "dark" empezando con "light".
 
-  const fullSystemPrompt = systemPrompt + designPrompt;
+Tipo "content":
+{
+  "type": "content",
+  "theme": "light",
+  "tag": "Error 01 / Tip 01 / Paso 01 / Clave 01 (segun el tema)",
+  "heading": "titulo directo y claro (max 8 palabras)",
+  "body": "explicacion concreta y accionable (max 40 palabras)",
+  "tip": "consejo especifico con <b>termino clave</b> en negrita - OPCIONAL, solo si aporta valor real"
+}
+
+Tipo "stats":
+{
+  "type": "stats",
+  "tag": "En numeros / Datos clave / Lo que dicen los datos",
+  "heading": "titular de las estadisticas (max 7 palabras)",
+  "stats": [
+    {"num": "75%",  "label": "descripcion concisa del dato (max 14 palabras)"},
+    {"num": "3x",   "label": "descripcion concisa del dato (max 14 palabras)"},
+    {"num": "53%",  "label": "descripcion concisa del dato (max 14 palabras)"},
+    {"num": "0.8%", "label": "descripcion concisa del dato (max 14 palabras)"}
+  ]
+}
+
+ELEMENTO ${n - 1} - type: "cta" (OBLIGATORIO):
+{
+  "type": "cta",
+  "eyebrow": "llamada a la accion (2-5 palabras)",
+  "headline": "propuesta de valor irresistible (max 8 palabras)",
+  "sub": "descripcion del beneficio o la oferta (max 22 palabras)",
+  "pill": "texto del boton CTA (3-6 palabras)",
+  "handle": "@prendetuweb.cl"
+}
+
+${withImage ? `ANALISIS DE PALETA VISUAL (campo "design"):
+El coral de la marca PTW (#ff638f) SIEMPRE se mantiene fijo, no lo incluyas.
+Solo ajusta los fondos oscuro/claro y el tono del texto secundario segun los colores de la imagen.
+- "dark"  -> muy oscuro, luminosidad < 12% (para texto blanco encima). Ej: #0d1117, #1a0f0a
+- "light" -> muy claro, luminosidad > 90% (para texto oscuro encima). Ej: #f5f0e8, #eef2f8
+- "muted" -> tono medio legible sobre "light". Usa la familia cromatica dominante de la imagen.
+- Si la imagen es en blanco y negro: dark #111111, light #f5f5f5, muted #6b7077.
+
+` : ''}REGLAS DE ESCRITURA:
+- Tono: directo, cercano, empatico. Habla de tu. Sin tecnicismos innecesarios.
+- Titulares: curiosidad, urgencia o beneficio claro. Faciles de entender a primera vista.
+- Estadisticas: datos reales y verificables del sector digital/marketing.
+- Chile-friendly: usa contexto o referencias chilenas cuando sea relevante.
+- La [palabra] en corchetes de la portada debe ser la mas impactante del titular.
+- El campo "tip" es OPCIONAL, incluyelo solo en algunos slides (no en todos).
+- Plataforma: tono y CTA apropiados para ${platName}.`;
 
   const userContent = [];
 
-  if (refImage && refMime) {
+  if (withImage) {
     userContent.push({
       type: 'image',
       source: { type: 'base64', media_type: refMime, data: refImage }
     });
     userContent.push({
       type: 'text',
-      text: `Analiza esta imagen: extrae su paleta cromática dominante para el campo "design", y adapta el tono/estilo/enfoque del contenido de los slides según lo que transmite.\n\nGenera el carrusel sobre: ${prompt}${urlContext}`
+      text: `Analiza esta imagen: extrae su paleta cromatica dominante para el campo "design", y adapta el tono/estilo del contenido segun lo que transmite.\n\nGenera el carrusel sobre: ${prompt}${urlContext}`
     });
   } else {
     userContent.push({
@@ -172,7 +170,7 @@ REGLAS DE CONTRASTE (obligatorio):
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
         max_tokens: 4096,
-        system: fullSystemPrompt,
+        system: systemPrompt,
         messages: [{ role: 'user', content: userContent }]
       })
     });
@@ -183,46 +181,61 @@ REGLAS DE CONTRASTE (obligatorio):
     }
 
     const data = await response.json();
+
+    // Guard against empty or unexpected response structure
+    if (!data.content || !data.content[0] || data.content[0].type !== 'text') {
+      return res.status(500).json({
+        error: 'Respuesta vacia del modelo',
+        detail: `stop_reason: ${data.stop_reason} | content: ${JSON.stringify(data.content)}`
+      });
+    }
+
     const rawText = data.content[0].text.trim();
 
     // Strip markdown code fences
-    let clean = rawText
+    const clean = rawText
       .replace(/^```json\s*/i, '')
       .replace(/^```\s*/i, '')
       .replace(/\s*```$/i, '')
       .trim();
 
-    let slides, design;
-
-    // When image was provided, expect { design: {...}, slides: [...] }
-    // Otherwise expect [...] array directly
-    if (refImage) {
-      const objMatch = clean.match(/\{[\s\S]*\}/);
-      if (objMatch) {
-        const parsed = JSON.parse(objMatch[0]);
-        slides = parsed.slides;
-        design = parsed.design || null;
+    // Parse response — object format when image, array format otherwise
+    try {
+      if (withImage) {
+        const objMatch = clean.match(/\{[\s\S]*\}/);
+        if (objMatch) {
+          const parsed = JSON.parse(objMatch[0]);
+          if (Array.isArray(parsed.slides) && parsed.slides.length >= 2) {
+            return res.status(200).json({ slides: parsed.slides, design: parsed.design || null });
+          }
+        }
       }
-    }
 
-    // Fallback: extract array directly (no image case, or object parse failed)
-    if (!Array.isArray(slides)) {
+      // Array format (no image, or object parse fallback)
       const arrMatch = clean.match(/\[[\s\S]*\]/);
       if (!arrMatch) {
         return res.status(500).json({
-          error: 'El modelo no devolvió JSON válido',
-          detail: rawText.slice(0, 300)
+          error: 'JSON no encontrado en la respuesta',
+          detail: rawText.slice(0, 400)
         });
       }
-      slides = JSON.parse(arrMatch[0]);
-      design = null;
-    }
 
-    if (!Array.isArray(slides) || slides.length < 2) {
-      return res.status(500).json({ error: 'Array de slides inválido o vacío' });
-    }
+      const slides = JSON.parse(arrMatch[0]);
+      if (!Array.isArray(slides) || slides.length < 2) {
+        return res.status(500).json({
+          error: 'Array de slides invalido o vacio',
+          detail: rawText.slice(0, 400)
+        });
+      }
 
-    return res.status(200).json({ slides, design: design || null });
+      return res.status(200).json({ slides, design: null });
+
+    } catch (parseErr) {
+      return res.status(500).json({
+        error: 'Error al parsear JSON del modelo',
+        detail: parseErr.message + ' — respuesta: ' + rawText.slice(0, 400)
+      });
+    }
 
   } catch (err) {
     return res.status(500).json({ error: 'Error interno del servidor', detail: err.message });

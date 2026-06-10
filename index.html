@@ -857,7 +857,7 @@ textarea::placeholder, input::placeholder {
         body: JSON.stringify(body)
       });
       const data = await res.json();
-      if (!res.ok || data.error) throw new Error(data.error || 'Error desconocido');
+      if (!res.ok || data.error) throw new Error((data.error || 'Error desconocido') + (data.detail ? ` — ${data.detail}` : ''));
 
       slides = data.slides;  // array
       design = data.design || null;
