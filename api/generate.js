@@ -3,15 +3,58 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY;
+  if (!ANTHROPIC_KEY) {
+    return res.status(500).json({ error: 'API key no configurada' });
+  }
+
+  // ── LinkedIn copy (separate call after carousel is generated) ──
+  if (req.body.action === 'linkedin-copy') {
+    const { prompt: userPrompt, slides: slidesData } = req.body;
+    const summary = (slidesData || []).map((s, i) => {
+      if (s.type === 'cover')   return `Portada: "${s.headline}" — ${s.sub || ''}`;
+      if (s.type === 'content') return `Slide ${i + 1}: "${s.heading}" — ${s.body || ''}`;
+      if (s.type === 'stats')   return `Estadisticas: "${s.heading}"`;
+      if (s.type === 'cta')     return `CTA: "${s.headline}" — ${s.sub || ''}`;
+      return '';
+    }).filter(Boolean).join('\n');
+
+    try {
+      const copyRes = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-api-key': ANTHROPIC_KEY, 'anthropic-version': '2023-06-01' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 1024,
+          messages: [{ role: 'user', content: `Eres experto en copywriting para LinkedIn de la agencia chilena Prende Tu Web (PTW). Genera el copy del post que acompanara este carrusel.
+
+Tema: "${userPrompt}"
+Contenido del carrusel:
+${summary}
+
+RESPONDE UNICAMENTE con este JSON (sin texto adicional ni bloques de codigo):
+{
+  "title": "Titulo del documento adjunto en LinkedIn (max 10 palabras)",
+  "body": "Texto del post: hook de 1-2 oraciones + puntos clave con emojis y saltos de linea \\n + CTA claro. Max 1300 caracteres. Tono profesional pero cercano.",
+  "hashtags": ["#Hashtag1","#Hashtag2","#Hashtag3","#Hashtag4","#Hashtag5"]
+}` }]
+        })
+      });
+      if (!copyRes.ok) return res.status(500).json({ error: 'Error de API al generar copy' });
+      const copyData = await copyRes.json();
+      const copyRaw  = copyData.content[0].text.trim().replace(/^```json\s*/i,'').replace(/^```\s*/i,'').replace(/\s*```$/i,'');
+      const copyMatch = copyRaw.match(/\{[\s\S]*\}/);
+      if (!copyMatch) return res.status(500).json({ error: 'No se pudo parsear el copy' });
+      return res.status(200).json(JSON.parse(copyMatch[0]));
+    } catch(e) {
+      return res.status(500).json({ error: 'Error generando copy: ' + e.message });
+    }
+  }
+
   const { prompt, platform, topic, slideCount, refImage, refMime } = req.body;
 
   if (!prompt) {
     return res.status(400).json({ error: 'Prompt requerido' });
-  }
-
-  const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY;
-  if (!ANTHROPIC_KEY) {
-    return res.status(500).json({ error: 'API key no configurada' });
   }
 
   const n = Math.max(3, Math.min(20, parseInt(slideCount) || 7));
@@ -54,38 +97,22 @@ export default async function handler(req, res) {
 
   const platName = platform === 'linkedin' ? 'LinkedIn' : 'Instagram';
   const withImage = !!(refImage && refMime);
-  const isLinkedIn = platform === 'linkedin';
-  const useObjectFormat = withImage || isLinkedIn;
 
-  // Response format depends on platform and whether an image was provided
-  let responseFormat;
-  if (withImage && isLinkedIn) {
-    responseFormat = `RESPONDE UNICAMENTE con un objeto JSON valido con exactamente tres campos: "design", "slides" y "linkedinCopy". Sin explicaciones, sin texto adicional, sin bloques de codigo markdown.
+  // Response format: object (with design) when image provided, plain array otherwise
+  const responseFormat = withImage
+    ? `RESPONDE UNICAMENTE con un objeto JSON valido con exactamente dos campos: "design" y "slides". Sin explicaciones, sin texto adicional, sin bloques de codigo markdown.
 
 {
-  "design": { "dark": "#RRGGBB", "light": "#RRGGBB", "muted": "#RRGGBB" },
-  "slides": [ ...array de ${n} slides... ],
-  "linkedinCopy": { "title": "...", "body": "...", "hashtags": ["#tag1","#tag2","#tag3","#tag4","#tag5"] }
-}`;
-  } else if (withImage) {
-    responseFormat = `RESPONDE UNICAMENTE con un objeto JSON valido con exactamente dos campos: "design" y "slides". Sin explicaciones, sin texto adicional, sin bloques de codigo markdown.
-
-{
-  "design": { "dark": "#RRGGBB", "light": "#RRGGBB", "muted": "#RRGGBB" },
+  "design": {
+    "dark":  "#RRGGBB",
+    "light": "#RRGGBB",
+    "muted": "#RRGGBB"
+  },
   "slides": [ ...array de ${n} slides... ]
-}`;
-  } else if (isLinkedIn) {
-    responseFormat = `RESPONDE UNICAMENTE con un objeto JSON valido con exactamente dos campos: "slides" y "linkedinCopy". Sin explicaciones, sin texto adicional, sin bloques de codigo markdown.
-
-{
-  "slides": [ ...array de ${n} slides... ],
-  "linkedinCopy": { "title": "...", "body": "...", "hashtags": ["#tag1","#tag2","#tag3","#tag4","#tag5"] }
-}`;
-  } else {
-    responseFormat = `RESPONDE UNICAMENTE con un JSON array valido. Sin explicaciones, sin texto adicional, sin bloques de codigo markdown.
+}`
+    : `RESPONDE UNICAMENTE con un JSON array valido. Sin explicaciones, sin texto adicional, sin bloques de codigo markdown.
 
 [ ...array de ${n} slides... ]`;
-  }
 
   const systemPrompt = `Eres un experto en marketing digital y copywriting para ${platName}, especializado en contenido de alta conversion para la agencia chilena Prende Tu Web (PTW).
 
@@ -156,13 +183,7 @@ Solo ajusta los fondos oscuro/claro y el tono del texto secundario segun los col
 - La [palabra] en corchetes de la portada debe ser la mas impactante del titular.
 - El campo "tip" es OPCIONAL, incluyelo solo en algunos slides (no en todos).
 - Plataforma: tono y CTA apropiados para ${platName}.
-- JSON valido: si citas o enfatizas palabras en el texto, usa comillas simples ('word') o guillemets («word»), NUNCA comillas dobles que rompen el JSON.
-${isLinkedIn ? `
-COPY PARA LINKEDIN (campo "linkedinCopy"):
-Genera el copy del post que acompanara al carrusel en LinkedIn. Campos:
-- "title": Titulo del documento adjunto (el carrusel). Breve y descriptivo, max 10 palabras. Aparece como nombre del archivo en LinkedIn. Ej: "7 Errores de SEO que Destruyen tu Posicionamiento".
-- "body": Texto completo del post. Estructura: Hook impactante (1-2 oraciones que detengan el scroll) + cuerpo con los puntos clave del carrusel (puedes usar emojis y saltos de linea \\n) + CTA claro. Maximo 1300 caracteres. Tono profesional pero humano y cercano.
-- "hashtags": Exactamente 5 hashtags estrategicos. Combina amplios (#MarketingDigital) con especificos (#SEOChile). Los hashtags siguen siendo utiles en LinkedIn para descubrimiento. Mezcla espanol e ingles segun el tema.` : ''}`;
+- JSON valido: si citas o enfatizas palabras en el texto, usa comillas simples ('word') o guillemets, NUNCA comillas dobles que rompen el JSON.`;
 
   const userContent = [];
 
@@ -246,23 +267,19 @@ Genera el copy del post que acompanara al carrusel en LinkedIn. Campos:
       return out;
     }
 
-    // Parse response — object format for LinkedIn/image, array format otherwise
+    // Parse response — object format when image provided, array format otherwise
     try {
-      if (useObjectFormat) {
+      if (withImage) {
         const objMatch = clean.match(/\{[\s\S]*\}/);
         if (objMatch) {
           const parsed = JSON.parse(repairJSON(objMatch[0]));
           if (Array.isArray(parsed.slides) && parsed.slides.length >= 2) {
-            return res.status(200).json({
-              slides: parsed.slides,
-              design: parsed.design || null,
-              linkedinCopy: parsed.linkedinCopy || null
-            });
+            return res.status(200).json({ slides: parsed.slides, design: parsed.design || null });
           }
         }
       }
 
-      // Array format (Instagram without image, or object parse fallback)
+      // Array format (no image, or object parse fallback)
       const arrMatch = clean.match(/\[[\s\S]*\]/);
       if (!arrMatch) {
         return res.status(500).json({
@@ -279,7 +296,7 @@ Genera el copy del post que acompanara al carrusel en LinkedIn. Campos:
         });
       }
 
-      return res.status(200).json({ slides, design: null, linkedinCopy: null });
+      return res.status(200).json({ slides, design: null });
 
     } catch (parseErr) {
       return res.status(500).json({

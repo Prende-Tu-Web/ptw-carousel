@@ -1010,8 +1010,8 @@ textarea::placeholder, input::placeholder {
       const count = slides.length;
       document.getElementById('prevTitle').textContent = `Preview — ${count} slides`;
       renderCarousel(slides);
-      if (platform === 'linkedin' && data.linkedinCopy) {
-        showLinkedinCopy(data.linkedinCopy);
+      if (platform === 'linkedin') {
+        generateLinkedinCopy();  // fire separately — carousel already showing
       } else {
         document.getElementById('linkedinCopyPanel').style.display = 'none';
       }
@@ -1034,13 +1034,19 @@ textarea::placeholder, input::placeholder {
     document.getElementById('skeleton').style.display   = 'none';
     wrap.style.display = 'flex';
 
-    frame.srcdoc = html;
+    // Set estimated height immediately so content is visible before onload
+    const slideH = format === '4:5' ? 1350 : 1080;
+    const scale  = (frame.offsetWidth || 580) / 1080;
+    frame.style.height = (slidesArr.length * (slideH * scale + 60) + 80) + 'px';
+
+    // Assign onload BEFORE srcdoc to avoid race condition where load fires before handler is set
     frame.onload = () => {
       try {
         const h = frame.contentDocument.body.scrollHeight;
-        frame.style.height = h + 'px';
-      } catch(e) { frame.style.height = '9000px'; }
+        if (h > 100) frame.style.height = h + 'px';
+      } catch(e) {}
     };
+    frame.srcdoc = html;
   }
 
   /* ── Sync iframe contenteditable edits back into the slides array ── */
@@ -1121,6 +1127,33 @@ textarea::placeholder, input::placeholder {
     win.document.write(injected);
     win.document.close();
     win.onload = () => { setTimeout(() => { win.focus(); win.print(); }, 1200); };
+  }
+
+  /* ── LinkedIn Copy — separate API call after carousel renders ── */
+  async function generateLinkedinCopy() {
+    const panel = document.getElementById('linkedinCopyPanel');
+    panel.style.display = 'block';
+    document.getElementById('lcpTitle').textContent = 'Generando copy…';
+    document.getElementById('lcpBody').textContent  = '';
+    document.getElementById('lcpHashtags').innerHTML = '';
+
+    try {
+      const res = await fetch('/api/generate', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          action: 'linkedin-copy',
+          prompt: document.getElementById('promptInput').value.trim(),
+          slides
+        })
+      });
+      const data = await res.json();
+      if (!res.ok || data.error) throw new Error(data.error || 'Error desconocido');
+      showLinkedinCopy(data);
+    } catch(err) {
+      document.getElementById('lcpTitle').textContent = '⚠ Error al generar copy';
+      document.getElementById('lcpBody').textContent  = err.message;
+    }
   }
 
   /* ── LinkedIn Copy Panel ── */
