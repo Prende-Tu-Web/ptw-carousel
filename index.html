@@ -562,6 +562,15 @@ textarea::placeholder, input::placeholder {
   border-radius: 100px;
   letter-spacing: .01em;
 }
+.lcp-placeholder {
+  padding: 18px 20px;
+  color: var(--muted);
+  font-size: 13px;
+  font-style: italic;
+  text-align: center;
+}
+/* LinkedIn panel sits above carousel, needs margin below */
+#linkedinCopyPanel { margin-bottom: 20px; }
 </style>
 </head>
 <body>
@@ -662,6 +671,35 @@ textarea::placeholder, input::placeholder {
   <!-- PREVIEW -->
   <div class="preview" id="previewArea">
 
+    <!-- LinkedIn Copy Panel — shown at top when LinkedIn is selected -->
+    <div class="lcp-panel" id="linkedinCopyPanel" style="display:none">
+      <div class="lcp-header">
+        <span class="lcp-header-icon">💼</span>
+        <span class="lcp-header-title">Copy para LinkedIn</span>
+        <span class="lcp-note">Hashtags siguen funcionando en 2025</span>
+      </div>
+      <div id="lcpPlaceholder" class="lcp-placeholder">
+        Genera el carrusel para obtener el copy del post →
+      </div>
+      <div id="lcpRows" style="display:none">
+        <div class="lcp-row">
+          <div class="lcp-row-label">Título del documento</div>
+          <div class="lcp-content lcp-title-text" id="lcpTitle"></div>
+          <button class="lcp-copy-btn" onclick="lcpCopy('lcpTitle', this)">Copiar</button>
+        </div>
+        <div class="lcp-row">
+          <div class="lcp-row-label">Copy del post <span class="lcp-badge">listo para publicar</span></div>
+          <div class="lcp-content" id="lcpBody"></div>
+          <button class="lcp-copy-btn" onclick="lcpCopy('lcpBody', this)">Copiar</button>
+        </div>
+        <div class="lcp-row" style="border-bottom:none">
+          <div class="lcp-row-label">Hashtags <span class="lcp-badge">3–5 recomendado</span></div>
+          <div class="lcp-hashtags" id="lcpHashtags"></div>
+          <button class="lcp-copy-btn" onclick="lcpCopyHashtags(this)" style="top:13px">Copiar todos</button>
+        </div>
+      </div>
+    </div>
+
     <div class="empty" id="emptyState">
       <div class="empty-icon">🎠</div>
       <h3>Tu carrusel aparecerá aquí</h3>
@@ -687,33 +725,6 @@ textarea::placeholder, input::placeholder {
       <iframe id="slideFrame" scrolling="no"></iframe>
     </div>
 
-    <!-- LinkedIn Copy Panel -->
-    <div class="lcp-panel" id="linkedinCopyPanel" style="display:none">
-      <div class="lcp-header">
-        <span class="lcp-header-icon">💼</span>
-        <span class="lcp-header-title">Copy para LinkedIn</span>
-        <span class="lcp-note">Hashtags siguen funcionando en 2025 — úsalos al final</span>
-      </div>
-
-      <div class="lcp-row">
-        <div class="lcp-row-label">Título del documento</div>
-        <div class="lcp-content lcp-title-text" id="lcpTitle"></div>
-        <button class="lcp-copy-btn" onclick="lcpCopy('lcpTitle', this)">Copiar</button>
-      </div>
-
-      <div class="lcp-row">
-        <div class="lcp-row-label">Copy del post <span class="lcp-badge">listo para publicar</span></div>
-        <div class="lcp-content" id="lcpBody"></div>
-        <button class="lcp-copy-btn" onclick="lcpCopy('lcpBody', this)">Copiar</button>
-      </div>
-
-      <div class="lcp-row">
-        <div class="lcp-row-label">Hashtags <span class="lcp-badge">3–5 recomendado</span></div>
-        <div class="lcp-hashtags" id="lcpHashtags"></div>
-        <button class="lcp-copy-btn" onclick="lcpCopyHashtags(this)" style="top:13px">Copiar todos</button>
-      </div>
-    </div>
-
   </div>
 </div>
 
@@ -734,6 +745,16 @@ textarea::placeholder, input::placeholder {
     document.querySelectorAll('.plat-btn').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
     platform = btn.dataset.plat;
+    const panel = document.getElementById('linkedinCopyPanel');
+    if (platform === 'linkedin') {
+      panel.style.display = 'block';
+    } else {
+      panel.style.display = 'none';
+      // Reset copy state for next LinkedIn generation
+      linkedinCopy = null;
+      document.getElementById('lcpPlaceholder').style.display = 'block';
+      document.getElementById('lcpRows').style.display = 'none';
+    }
   }
 
   /* ── Example chips ── */
@@ -1011,9 +1032,7 @@ textarea::placeholder, input::placeholder {
       document.getElementById('prevTitle').textContent = `Preview — ${count} slides`;
       renderCarousel(slides);
       if (platform === 'linkedin') {
-        generateLinkedinCopy();  // fire separately — carousel already showing
-      } else {
-        document.getElementById('linkedinCopyPanel').style.display = 'none';
+        generateLinkedinCopy();  // fire separately — panel already visible via setPlatform
       }
       const paletteNote = design ? ' · paleta personalizada aplicada' : '';
       setStatus(`✓ Carrusel generado — ${count} slides${paletteNote}`, 'ok');
@@ -1131,8 +1150,9 @@ textarea::placeholder, input::placeholder {
 
   /* ── LinkedIn Copy — separate API call after carousel renders ── */
   async function generateLinkedinCopy() {
-    const panel = document.getElementById('linkedinCopyPanel');
-    panel.style.display = 'block';
+    // Show loading state inside existing panel (already visible via setPlatform)
+    document.getElementById('lcpPlaceholder').style.display = 'none';
+    document.getElementById('lcpRows').style.display = 'block';
     document.getElementById('lcpTitle').textContent = 'Generando copy…';
     document.getElementById('lcpBody').textContent  = '';
     document.getElementById('lcpHashtags').innerHTML = '';
@@ -1158,16 +1178,20 @@ textarea::placeholder, input::placeholder {
 
   /* ── LinkedIn Copy Panel ── */
   function showLinkedinCopy(data) {
-    const panel = document.getElementById('linkedinCopyPanel');
-    if (!data) { panel.style.display = 'none'; return; }
+    if (!data) {
+      document.getElementById('lcpPlaceholder').style.display = 'block';
+      document.getElementById('lcpRows').style.display = 'none';
+      return;
+    }
     linkedinCopy = data;
+    document.getElementById('lcpPlaceholder').style.display = 'none';
+    document.getElementById('lcpRows').style.display = 'block';
     document.getElementById('lcpTitle').textContent = data.title || '';
     document.getElementById('lcpBody').textContent  = data.body  || '';
     const hashEl = document.getElementById('lcpHashtags');
     hashEl.innerHTML = (data.hashtags || [])
       .map(h => `<span class="lcp-tag">${h}</span>`)
       .join('');
-    panel.style.display = 'block';
   }
 
   function lcpCopy(elementId, btn) {
