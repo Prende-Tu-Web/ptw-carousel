@@ -858,7 +858,13 @@ textarea::placeholder, input::placeholder {
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify(body)
       });
-      const data = await res.json();
+      const rawText = await res.text();
+      let data;
+      try {
+        data = JSON.parse(rawText);
+      } catch(e) {
+        throw new Error(`Error del servidor (${res.status}): ${rawText.slice(0, 200)}`);
+      }
       if (!res.ok || data.error) throw new Error((data.error || 'Error desconocido') + (data.detail ? ` — ${data.detail}` : ''));
 
       slides = data.slides;  // array
