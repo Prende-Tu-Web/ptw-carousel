@@ -606,6 +606,7 @@ textarea::placeholder, input::placeholder {
 
   /* ── Format toggle ── */
   function setFormat(fmt, btn) {
+    syncEdits();
     format = fmt;
     document.querySelectorAll('.prev-btn').forEach(b=>b.classList.remove('on'));
     btn.classList.add('on');
@@ -724,10 +725,10 @@ textarea::placeholder, input::placeholder {
 </div>`;
   }
 
-  function slideContent(s, n, contentN) {
-    const theme  = s.theme || (contentN % 2 === 0 ? 'dark' : 'light');
-    const numStr = String(contentN).padStart(2,'0');
-    const side   = contentN % 2 === 0 ? 'left:-20px;top:120px;' : 'right:-30px;bottom:60px;';
+  function slideContent(s, n) {
+    const theme  = s.theme || (n % 2 === 0 ? 'dark' : 'light');
+    const numStr = String(n).padStart(2,'0');
+    const side   = n % 2 === 0 ? 'left:-20px;top:120px;' : 'right:-30px;bottom:60px;';
     const tipHTML = s.tip ? `<div class="tip">
           <span class="ico">💡</span>
           <span class="tt edit">${rich(s.tip)}</span>
@@ -751,6 +752,7 @@ textarea::placeholder, input::placeholder {
   }
 
   function slideStats(s, n) {
+    const theme = s.theme || (n % 2 === 0 ? 'dark' : 'light');
     const statsHTML = (s.stats||[]).slice(0,4).map(st =>
       `<div class="stat">
           <div class="num edit">${esc(st.num)}</div>
@@ -760,7 +762,7 @@ textarea::placeholder, input::placeholder {
     return `<div class="unit">
   <div class="slabel"><span class="n">${n}</span> Estadísticas</div>
   <div class="frame">
-    <div class="slide light">
+    <div class="slide ${theme}">
       ${MARK}
       <div class="body">
         <div class="stats-head">
@@ -800,14 +802,12 @@ textarea::placeholder, input::placeholder {
 
   /* Build full carousel HTML from slide array */
   function buildCarouselHTML(slidesArr) {
-    let contentIdx = 0;
     const units = slidesArr.map((s, i) => {
       const n = i + 1;
       if (s.type === 'cover') return slideCover(s, n);
       if (s.type === 'cta')   return slideCTA(s, n);
       if (s.type === 'stats') return slideStats(s, n);
-      contentIdx++;
-      return slideContent(s, n, contentIdx);
+      return slideContent(s, n);
     }).join('\n');
 
     let html = tplHTML.replace('<!--SLIDES-->', units);
@@ -832,7 +832,9 @@ textarea::placeholder, input::placeholder {
   /* ── Generate ── */
   async function generate() {
     const prompt     = document.getElementById('promptInput').value.trim();
-    const slideCount = parseInt(document.getElementById('slideCount').value) || 7;
+    const rawCount   = parseInt(document.getElementById('slideCount').value) || 7;
+    const slideCount = Math.max(3, Math.min(20, rawCount));
+    if (rawCount !== slideCount) document.getElementById('slideCount').value = slideCount;
     if (!prompt) { setStatus('Por favor escribe el tema del carrusel', 'err'); return; }
     if (!tplHTML) { setStatus('Template cargando, intenta en un segundo', 'err'); return; }
     clearStatus();
@@ -892,9 +894,47 @@ textarea::placeholder, input::placeholder {
     };
   }
 
+  /* ── Sync iframe contenteditable edits back into the slides array ── */
+  function syncEdits() {
+    if (!slides) return;
+    let doc;
+    try { doc = document.getElementById('slideFrame').contentDocument; } catch(e) { return; }
+    if (!doc) return;
+    doc.querySelectorAll('.unit').forEach((unit, i) => {
+      const s = slides[i];
+      if (!s) return;
+      const edits = [...unit.querySelectorAll('.edit')];
+      if (!edits.length) return;
+      if (s.type === 'cover') {
+        if (edits[0]) s.eyebrow  = edits[0].textContent;
+        if (edits[1]) s.headline = edits[1].textContent;
+        if (edits[2]) s.sub      = edits[2].textContent;
+      } else if (s.type === 'content') {
+        if (edits[0]) s.tag     = edits[0].textContent;
+        if (edits[1]) s.heading = edits[1].textContent;
+        if (edits[2]) s.body    = edits[2].textContent;
+        if (s.tip && edits[3]) s.tip = edits[3].innerHTML.replace(/<(?!\/?(b)>)[^>]*>/gi, '');
+      } else if (s.type === 'stats') {
+        if (edits[0]) s.tag     = edits[0].textContent;
+        if (edits[1]) s.heading = edits[1].textContent;
+        if (s.stats) s.stats.forEach((st, j) => {
+          if (edits[2 + j * 2])     st.num   = edits[2 + j * 2].textContent;
+          if (edits[2 + j * 2 + 1]) st.label = edits[2 + j * 2 + 1].textContent;
+        });
+      } else if (s.type === 'cta') {
+        if (edits[0]) s.eyebrow  = edits[0].textContent;
+        if (edits[1]) s.headline = edits[1].textContent;
+        if (edits[2]) s.sub      = edits[2].textContent;
+        if (edits[3]) s.pill     = edits[3].textContent;
+        if (edits[4]) s.handle   = edits[4].textContent;
+      }
+    });
+  }
+
   /* ── Download HTML ── */
   function downloadHTML() {
     if (!slides || !tplHTML) return;
+    syncEdits();
     const html = buildCarouselHTML(slides);
     const a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob([html],{type:'text/html'}));
@@ -905,6 +945,7 @@ textarea::placeholder, input::placeholder {
   /* ── Export PDF ── */
   function exportPDF() {
     if (!slides || !tplHTML) return;
+    syncEdits();
     const slideH = format === '4:5' ? 1350 : 1080;
     let html = buildCarouselHTML(slides);
 
@@ -912,6 +953,7 @@ textarea::placeholder, input::placeholder {
 <style id="ptw-print">
 @page { size: 1080px ${slideH}px; margin: 0; }
 @media print {
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   html, body { width: 1080px; background: transparent !important; padding: 0 !important; }
   .topbar { display: none !important; }
   body > .deck { padding: 0 !important; gap: 0 !important; }
@@ -925,6 +967,7 @@ textarea::placeholder, input::placeholder {
 
     const injected = html.replace('</head>', printCSS + '</head>');
     const win = window.open('', '_blank', 'width=1080,height=800');
+    if (!win) { setStatus('Permite los popups en este sitio para exportar PDF', 'err'); return; }
     win.document.open();
     win.document.write(injected);
     win.document.close();

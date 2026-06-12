@@ -169,7 +169,7 @@ Solo ajusta los fondos oscuro/claro y el tono del texto secundario segun los col
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: 4096,
+        max_tokens: 8096,
         system: systemPrompt,
         messages: [{ role: 'user', content: userContent }]
       })
