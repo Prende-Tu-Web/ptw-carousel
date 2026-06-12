@@ -139,7 +139,8 @@ Solo ajusta los fondos oscuro/claro y el tono del texto secundario segun los col
 - Chile-friendly: usa contexto o referencias chilenas cuando sea relevante.
 - La [palabra] en corchetes de la portada debe ser la mas impactante del titular.
 - El campo "tip" es OPCIONAL, incluyelo solo en algunos slides (no en todos).
-- Plataforma: tono y CTA apropiados para ${platName}.`;
+- Plataforma: tono y CTA apropiados para ${platName}.
+- JSON valido: si citas o enfatizas palabras en el texto, usa comillas simples ('word') o guillemets («word»), NUNCA comillas dobles que rompen el JSON.`;
 
   const userContent = [];
 
@@ -199,12 +200,36 @@ Solo ajusta los fondos oscuro/claro y el tono del texto secundario segun los col
       .replace(/\s*```$/i, '')
       .trim();
 
+    // Repair unescaped double quotes inside JSON string values.
+    // Claude sometimes writes: "heading": "text with "quotes" inside"
+    // which is invalid JSON. This state-machine escapes those quotes.
+    function repairJSON(json) {
+      let out = '', inStr = false, i = 0;
+      while (i < json.length) {
+        const c = json[i];
+        if (c === '\\' && inStr) { out += c + (json[i + 1] || ''); i += 2; continue; }
+        if (c === '"') {
+          if (!inStr) { inStr = true; out += c; }
+          else {
+            let j = i + 1;
+            while (j < json.length && (json[j] === ' ' || json[j] === '\n' || json[j] === '\r' || json[j] === '\t')) j++;
+            const next = json[j];
+            if (!next || next === ':' || next === ',' || next === '}' || next === ']') {
+              inStr = false; out += c;
+            } else { out += '\\"'; }
+          }
+        } else { out += c; }
+        i++;
+      }
+      return out;
+    }
+
     // Parse response — object format when image, array format otherwise
     try {
       if (withImage) {
         const objMatch = clean.match(/\{[\s\S]*\}/);
         if (objMatch) {
-          const parsed = JSON.parse(objMatch[0]);
+          const parsed = JSON.parse(repairJSON(objMatch[0]));
           if (Array.isArray(parsed.slides) && parsed.slides.length >= 2) {
             return res.status(200).json({ slides: parsed.slides, design: parsed.design || null });
           }
@@ -220,7 +245,7 @@ Solo ajusta los fondos oscuro/claro y el tono del texto secundario segun los col
         });
       }
 
-      const slides = JSON.parse(arrMatch[0]);
+      const slides = JSON.parse(repairJSON(arrMatch[0]));
       if (!Array.isArray(slides) || slides.length < 2) {
         return res.status(500).json({
           error: 'Array de slides invalido o vacio',
