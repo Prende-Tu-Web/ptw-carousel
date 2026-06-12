@@ -452,6 +452,116 @@ textarea::placeholder, input::placeholder {
   .panel { max-height: none; overflow: visible; }
   body { overflow: auto; height: auto; }
 }
+
+/* ── LINKEDIN COPY PANEL ── */
+.lcp-panel {
+  width: 100%;
+  max-width: 580px;
+  margin-top: 20px;
+  background: var(--white);
+  border-radius: 16px;
+  border: 1.5px solid var(--border);
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(17,26,27,.07);
+}
+.lcp-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 18px;
+  background: #0A66C2;
+  color: #fff;
+}
+.lcp-header-icon { font-size: 15px; }
+.lcp-header-title {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+.lcp-note {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 500;
+  opacity: .75;
+}
+.lcp-row {
+  padding: 14px 18px 14px 18px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+.lcp-row:last-child { border-bottom: none; }
+.lcp-row-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  margin-bottom: 7px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.lcp-badge {
+  font-size: 9px;
+  background: var(--lav);
+  color: var(--muted);
+  padding: 1px 7px;
+  border-radius: 100px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: none;
+}
+.lcp-content {
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--dark);
+  white-space: pre-wrap;
+  word-break: break-word;
+  padding-right: 90px;
+}
+.lcp-content.lcp-title-text {
+  font-weight: 700;
+  font-size: 14px;
+}
+.lcp-copy-btn {
+  position: absolute;
+  right: 18px;
+  top: 13px;
+  padding: 5px 13px;
+  border-radius: 100px;
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  color: var(--muted);
+  font-family: var(--font);
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .18s;
+  letter-spacing: .04em;
+  white-space: nowrap;
+}
+.lcp-copy-btn:hover { border-color: var(--coral); color: var(--coral); }
+.lcp-copy-btn.copied {
+  background: var(--coral);
+  border-color: var(--coral);
+  color: #fff;
+}
+.lcp-hashtags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding-right: 100px;
+}
+.lcp-tag {
+  background: #e8f0f9;
+  color: #0A66C2;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 11px;
+  border-radius: 100px;
+  letter-spacing: .01em;
+}
 </style>
 </head>
 <body>
@@ -577,17 +687,45 @@ textarea::placeholder, input::placeholder {
       <iframe id="slideFrame" scrolling="no"></iframe>
     </div>
 
+    <!-- LinkedIn Copy Panel -->
+    <div class="lcp-panel" id="linkedinCopyPanel" style="display:none">
+      <div class="lcp-header">
+        <span class="lcp-header-icon">💼</span>
+        <span class="lcp-header-title">Copy para LinkedIn</span>
+        <span class="lcp-note">Hashtags siguen funcionando en 2025 — úsalos al final</span>
+      </div>
+
+      <div class="lcp-row">
+        <div class="lcp-row-label">Título del documento</div>
+        <div class="lcp-content lcp-title-text" id="lcpTitle"></div>
+        <button class="lcp-copy-btn" onclick="lcpCopy('lcpTitle', this)">Copiar</button>
+      </div>
+
+      <div class="lcp-row">
+        <div class="lcp-row-label">Copy del post <span class="lcp-badge">listo para publicar</span></div>
+        <div class="lcp-content" id="lcpBody"></div>
+        <button class="lcp-copy-btn" onclick="lcpCopy('lcpBody', this)">Copiar</button>
+      </div>
+
+      <div class="lcp-row">
+        <div class="lcp-row-label">Hashtags <span class="lcp-badge">3–5 recomendado</span></div>
+        <div class="lcp-hashtags" id="lcpHashtags"></div>
+        <button class="lcp-copy-btn" onclick="lcpCopyHashtags(this)" style="top:13px">Copiar todos</button>
+      </div>
+    </div>
+
   </div>
 </div>
 
 <script>
-  let platform    = 'instagram';
-  let format      = '1:1';
-  let slides      = null;   // Array of slide objects
-  let design      = null;   // Color palette from image analysis
-  let tplHTML     = null;
-  let refImageB64 = null;
-  let refMime     = null;
+  let platform     = 'instagram';
+  let format       = '1:1';
+  let slides       = null;   // Array of slide objects
+  let design       = null;   // Color palette from image analysis
+  let tplHTML      = null;
+  let refImageB64  = null;
+  let refMime      = null;
+  let linkedinCopy = null;   // LinkedIn post copy (title, body, hashtags)
 
   fetch('/template.html').then(r=>r.text()).then(h=>{ tplHTML=h; }).catch(()=>{});
 
@@ -872,6 +1010,11 @@ textarea::placeholder, input::placeholder {
       const count = slides.length;
       document.getElementById('prevTitle').textContent = `Preview — ${count} slides`;
       renderCarousel(slides);
+      if (platform === 'linkedin' && data.linkedinCopy) {
+        showLinkedinCopy(data.linkedinCopy);
+      } else {
+        document.getElementById('linkedinCopyPanel').style.display = 'none';
+      }
       const paletteNote = design ? ' · paleta personalizada aplicada' : '';
       setStatus(`✓ Carrusel generado — ${count} slides${paletteNote}`, 'ok');
     } catch(err) {
@@ -978,6 +1121,58 @@ textarea::placeholder, input::placeholder {
     win.document.write(injected);
     win.document.close();
     win.onload = () => { setTimeout(() => { win.focus(); win.print(); }, 1200); };
+  }
+
+  /* ── LinkedIn Copy Panel ── */
+  function showLinkedinCopy(data) {
+    const panel = document.getElementById('linkedinCopyPanel');
+    if (!data) { panel.style.display = 'none'; return; }
+    linkedinCopy = data;
+    document.getElementById('lcpTitle').textContent = data.title || '';
+    document.getElementById('lcpBody').textContent  = data.body  || '';
+    const hashEl = document.getElementById('lcpHashtags');
+    hashEl.innerHTML = (data.hashtags || [])
+      .map(h => `<span class="lcp-tag">${h}</span>`)
+      .join('');
+    panel.style.display = 'block';
+  }
+
+  function lcpCopy(elementId, btn) {
+    const text = document.getElementById(elementId).textContent;
+    const label = btn.textContent;
+    const finish = () => {
+      btn.textContent = '✓ Copiado';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = label; btn.classList.remove('copied'); }, 2000);
+    };
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(finish).catch(() => fallbackCopy(text, finish));
+    } else { fallbackCopy(text, finish); }
+  }
+
+  function lcpCopyHashtags(btn) {
+    if (!linkedinCopy || !linkedinCopy.hashtags) return;
+    const text = linkedinCopy.hashtags.join(' ');
+    const finish = () => {
+      btn.textContent = '✓ Copiados';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copiar todos'; btn.classList.remove('copied'); }, 2000);
+    };
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(finish).catch(() => fallbackCopy(text, finish));
+    } else { fallbackCopy(text, finish); }
+  }
+
+  function fallbackCopy(text, cb) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); } catch(e) {}
+    ta.remove();
+    if (cb) cb();
   }
 
   /* ── Keyboard shortcut ── */

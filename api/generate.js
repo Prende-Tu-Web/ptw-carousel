@@ -54,22 +54,38 @@ export default async function handler(req, res) {
 
   const platName = platform === 'linkedin' ? 'LinkedIn' : 'Instagram';
   const withImage = !!(refImage && refMime);
+  const isLinkedIn = platform === 'linkedin';
+  const useObjectFormat = withImage || isLinkedIn;
 
-  // Response format changes based on whether there is an image or not
-  const responseFormat = withImage
-    ? `RESPONDE UNICAMENTE con un objeto JSON valido con exactamente dos campos: "design" y "slides". Sin explicaciones, sin texto adicional, sin bloques de codigo markdown.
+  // Response format depends on platform and whether an image was provided
+  let responseFormat;
+  if (withImage && isLinkedIn) {
+    responseFormat = `RESPONDE UNICAMENTE con un objeto JSON valido con exactamente tres campos: "design", "slides" y "linkedinCopy". Sin explicaciones, sin texto adicional, sin bloques de codigo markdown.
 
 {
-  "design": {
-    "dark":  "#RRGGBB",
-    "light": "#RRGGBB",
-    "muted": "#RRGGBB"
-  },
+  "design": { "dark": "#RRGGBB", "light": "#RRGGBB", "muted": "#RRGGBB" },
+  "slides": [ ...array de ${n} slides... ],
+  "linkedinCopy": { "title": "...", "body": "...", "hashtags": ["#tag1","#tag2","#tag3","#tag4","#tag5"] }
+}`;
+  } else if (withImage) {
+    responseFormat = `RESPONDE UNICAMENTE con un objeto JSON valido con exactamente dos campos: "design" y "slides". Sin explicaciones, sin texto adicional, sin bloques de codigo markdown.
+
+{
+  "design": { "dark": "#RRGGBB", "light": "#RRGGBB", "muted": "#RRGGBB" },
   "slides": [ ...array de ${n} slides... ]
-}`
-    : `RESPONDE UNICAMENTE con un JSON array valido. Sin explicaciones, sin texto adicional, sin bloques de codigo markdown.
+}`;
+  } else if (isLinkedIn) {
+    responseFormat = `RESPONDE UNICAMENTE con un objeto JSON valido con exactamente dos campos: "slides" y "linkedinCopy". Sin explicaciones, sin texto adicional, sin bloques de codigo markdown.
+
+{
+  "slides": [ ...array de ${n} slides... ],
+  "linkedinCopy": { "title": "...", "body": "...", "hashtags": ["#tag1","#tag2","#tag3","#tag4","#tag5"] }
+}`;
+  } else {
+    responseFormat = `RESPONDE UNICAMENTE con un JSON array valido. Sin explicaciones, sin texto adicional, sin bloques de codigo markdown.
 
 [ ...array de ${n} slides... ]`;
+  }
 
   const systemPrompt = `Eres un experto en marketing digital y copywriting para ${platName}, especializado en contenido de alta conversion para la agencia chilena Prende Tu Web (PTW).
 
@@ -140,7 +156,13 @@ Solo ajusta los fondos oscuro/claro y el tono del texto secundario segun los col
 - La [palabra] en corchetes de la portada debe ser la mas impactante del titular.
 - El campo "tip" es OPCIONAL, incluyelo solo en algunos slides (no en todos).
 - Plataforma: tono y CTA apropiados para ${platName}.
-- JSON valido: si citas o enfatizas palabras en el texto, usa comillas simples ('word') o guillemets («word»), NUNCA comillas dobles que rompen el JSON.`;
+- JSON valido: si citas o enfatizas palabras en el texto, usa comillas simples ('word') o guillemets («word»), NUNCA comillas dobles que rompen el JSON.
+${isLinkedIn ? `
+COPY PARA LINKEDIN (campo "linkedinCopy"):
+Genera el copy del post que acompanara al carrusel en LinkedIn. Campos:
+- "title": Titulo del documento adjunto (el carrusel). Breve y descriptivo, max 10 palabras. Aparece como nombre del archivo en LinkedIn. Ej: "7 Errores de SEO que Destruyen tu Posicionamiento".
+- "body": Texto completo del post. Estructura: Hook impactante (1-2 oraciones que detengan el scroll) + cuerpo con los puntos clave del carrusel (puedes usar emojis y saltos de linea \\n) + CTA claro. Maximo 1300 caracteres. Tono profesional pero humano y cercano.
+- "hashtags": Exactamente 5 hashtags estrategicos. Combina amplios (#MarketingDigital) con especificos (#SEOChile). Los hashtags siguen siendo utiles en LinkedIn para descubrimiento. Mezcla espanol e ingles segun el tema.` : ''}`;
 
   const userContent = [];
 
@@ -224,19 +246,23 @@ Solo ajusta los fondos oscuro/claro y el tono del texto secundario segun los col
       return out;
     }
 
-    // Parse response — object format when image, array format otherwise
+    // Parse response — object format for LinkedIn/image, array format otherwise
     try {
-      if (withImage) {
+      if (useObjectFormat) {
         const objMatch = clean.match(/\{[\s\S]*\}/);
         if (objMatch) {
           const parsed = JSON.parse(repairJSON(objMatch[0]));
           if (Array.isArray(parsed.slides) && parsed.slides.length >= 2) {
-            return res.status(200).json({ slides: parsed.slides, design: parsed.design || null });
+            return res.status(200).json({
+              slides: parsed.slides,
+              design: parsed.design || null,
+              linkedinCopy: parsed.linkedinCopy || null
+            });
           }
         }
       }
 
-      // Array format (no image, or object parse fallback)
+      // Array format (Instagram without image, or object parse fallback)
       const arrMatch = clean.match(/\[[\s\S]*\]/);
       if (!arrMatch) {
         return res.status(500).json({
@@ -253,7 +279,7 @@ Solo ajusta los fondos oscuro/claro y el tono del texto secundario segun los col
         });
       }
 
-      return res.status(200).json({ slides, design: null });
+      return res.status(200).json({ slides, design: null, linkedinCopy: null });
 
     } catch (parseErr) {
       return res.status(500).json({
