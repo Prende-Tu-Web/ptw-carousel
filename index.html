@@ -788,9 +788,12 @@ textarea::placeholder, input::placeholder {
     const btn = document.getElementById('genBtn');
     btn.disabled = on;
     btn.classList.toggle('loading', on);
-    document.getElementById('skeleton').style.display    = on ? 'flex' : 'none';
-    document.getElementById('emptyState').style.display  = on ? 'none' : '';
-    if (on) document.getElementById('carouselWrap').style.display = 'none';
+    document.getElementById('skeleton').style.display = on ? 'flex' : 'none';
+    if (on) {
+      document.getElementById('emptyState').style.display  = 'none';
+      document.getElementById('carouselWrap').style.display = 'none';
+    }
+    // emptyState on 'off' is managed by renderCarousel (success) and catch (error)
   }
 
   /* ── Reference image upload ── */
@@ -1150,13 +1153,19 @@ textarea::placeholder, input::placeholder {
 
   /* ── LinkedIn Copy — separate API call after carousel renders ── */
   async function generateLinkedinCopy() {
-    // Show loading state inside existing panel (already visible via setPlatform)
-    document.getElementById('lcpPlaceholder').style.display = 'none';
-    document.getElementById('lcpRows').style.display = 'block';
-    document.getElementById('lcpTitle').textContent = 'Generando copy…';
-    document.getElementById('lcpBody').textContent  = '';
-    document.getElementById('lcpHashtags').innerHTML = '';
+    const placeholder = document.getElementById('lcpPlaceholder');
+    const rows        = document.getElementById('lcpRows');
+    const titleEl     = document.getElementById('lcpTitle');
+    const bodyEl      = document.getElementById('lcpBody');
+    const hashEl      = document.getElementById('lcpHashtags');
 
+    placeholder.style.display = 'none';
+    rows.style.display        = 'block';
+    titleEl.textContent       = 'Generando copy…';
+    bodyEl.textContent        = '';
+    hashEl.innerHTML          = '';
+
+    let rawText = '';
     try {
       const res = await fetch('/api/generate', {
         method: 'POST',
@@ -1167,12 +1176,16 @@ textarea::placeholder, input::placeholder {
           slides
         })
       });
-      const data = await res.json();
-      if (!res.ok || data.error) throw new Error(data.error || 'Error desconocido');
+      rawText = await res.text();
+      let data;
+      try { data = JSON.parse(rawText); }
+      catch(e) { throw new Error('Respuesta inválida del servidor: ' + rawText.slice(0, 120)); }
+      if (!res.ok || data.error) throw new Error(data.error || `HTTP ${res.status}`);
       showLinkedinCopy(data);
     } catch(err) {
-      document.getElementById('lcpTitle').textContent = '⚠ Error al generar copy';
-      document.getElementById('lcpBody').textContent  = err.message;
+      titleEl.textContent = '⚠ Error al generar copy — intenta de nuevo';
+      bodyEl.textContent  = err.message;
+      bodyEl.style.color  = 'var(--coral)';
     }
   }
 
