@@ -12,7 +12,7 @@ window.PTW_STYLES.original = {
 .style-original .tag{font-size:13px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--coral);display:inline-flex;align-items:center;gap:12px;}
 .style-original .tag::before{content:"";width:26px;height:2px;background:var(--coral);display:inline-block;}
 .style-original .h-content{font-size:58px;font-weight:800;letter-spacing:-.035em;line-height:1.08;margin:22px 0 0;}
-.style-original .p-body{font-size:20px;font-weight:400;line-height:1.65;color:var(--muted);max-width:30ch;margin-top:22px;}
+.style-original .p-body{font-size:22px;font-weight:400;line-height:1.6;color:var(--muted);max-width:30ch;margin-top:22px;}
 .style-original.dark .p-body{color:#9aa0a6;}
 
 /* decorative big number */
@@ -27,7 +27,7 @@ window.PTW_STYLES.original = {
 }
 .style-original.dark .tip{background:#1b262a;border:1px solid rgba(255,255,255,.07);}
 .style-original .tip .ico{font-size:30px;line-height:1;flex:0 0 auto;}
-.style-original .tip .tt{font-size:16px;line-height:1.5;font-weight:500;}
+.style-original .tip .tt{font-size:17px;line-height:1.5;font-weight:500;}
 .style-original .tip .tt b{color:var(--coral);font-weight:700;}
 
 /* ============ SLIDE — COVER ============ */
@@ -71,7 +71,7 @@ window.PTW_STYLES.original = {
 .style-original .stat::before{content:"";position:absolute;top:0;left:0;right:0;height:5px;background:var(--coral);transform:scaleX(0);transform-origin:left;transition:transform .5s cubic-bezier(.2,.7,.3,1);}
 .style-original .stat:hover::before,.frame.live .style-original .stat::before{transform:scaleX(1);}
 .style-original .stat .num{font-size:64px;font-weight:900;color:var(--coral);letter-spacing:-.04em;line-height:1;}
-.style-original .stat .lab{font-size:15px;line-height:1.45;color:#3d4145;font-weight:500;margin-top:14px;max-width:22ch;}
+.style-original .stat .lab{font-size:16px;line-height:1.45;color:#3d4145;font-weight:500;margin-top:14px;max-width:22ch;}
 
 /* ============ SLIDE — CTA ============ */
 .style-original.cta .dots{

@@ -48,7 +48,7 @@ window.PTW_STYLES.split = {
 @keyframes split-arrow{0%,100%{transform:translateX(0);}50%{transform:translateX(10px);}}
 
 /* ============ SLIDE — CONTENT ============ */
-.style-split.ss-content{flex-direction:row;}
+.style-split.ss-content{flex-direction:row;padding:0;}
 .style-split.ss-content .ss-side{
   width:120px;flex:0 0 auto;background:var(--coral);
   display:flex;align-items:flex-end;padding:40px 0;position:relative;z-index:2;
@@ -73,7 +73,7 @@ window.PTW_STYLES.split = {
   font-size:48px;font-weight:900;letter-spacing:-.03em;line-height:1.1;margin-top:16px;max-width:18ch;
 }
 .style-split.ss-content .ss-body{
-  font-size:18px;line-height:1.65;margin-top:24px;max-width:32ch;font-weight:400;
+  font-size:21px;line-height:1.6;margin-top:24px;max-width:32ch;font-weight:400;
 }
 .style-split.ss-content.light .ss-body{color:var(--muted);}
 .style-split.ss-content.dark .ss-body{color:#9aa0a6;}
@@ -84,12 +84,13 @@ window.PTW_STYLES.split = {
 .style-split.ss-content.light .ss-tip{background:#fff;}
 .style-split.ss-content.dark .ss-tip{background:#1b262a;}
 .style-split.ss-content .ss-tip .ico{font-size:26px;line-height:1;flex:0 0 auto;}
-.style-split.ss-content .ss-tip .tt{font-size:15px;line-height:1.5;font-weight:500;}
+.style-split.ss-content .ss-tip .tt{font-size:17px;line-height:1.5;font-weight:500;}
 .style-split.ss-content .ss-tip .tt b{color:var(--coral);font-weight:700;}
 .style-split.ss-content .mark{position:absolute;top:32px;right:36px;z-index:3;}
+.style-split.ss-content .bar{position:absolute;left:72px;right:72px;bottom:40px;z-index:3;}
 
 /* ============ SLIDE — STATS ============ */
-.style-split.ss-stats{flex-direction:column;}
+.style-split.ss-stats{flex-direction:column;padding:0;}
 .style-split.ss-stats .ss-head{
   flex:0 0 auto;background:var(--coral);padding:48px 64px 36px;position:relative;z-index:2;
 }
@@ -111,7 +112,7 @@ window.PTW_STYLES.split = {
 .style-split.ss-stats .ss-card:nth-child(2n){border-right:none;}
 .style-split.ss-stats .ss-card:nth-child(n+3){border-bottom:none;}
 .style-split.ss-stats .ss-num{font-size:58px;font-weight:900;color:var(--coral);letter-spacing:-.04em;line-height:1;}
-.style-split.ss-stats .ss-lab{font-size:15px;line-height:1.45;font-weight:500;margin-top:14px;max-width:22ch;}
+.style-split.ss-stats .ss-lab{font-size:16px;line-height:1.45;font-weight:500;margin-top:14px;max-width:22ch;}
 .style-split.ss-stats.light .ss-lab{color:var(--muted);}
 .style-split.ss-stats.dark .ss-lab{color:#9aa0a6;}
 
@@ -185,8 +186,8 @@ window.PTW_STYLES.split = {
           <p class="ss-body edit">${esc(s.body)}</p>
           ${tipHTML}
         </div>
+        ${BRAND}
       </div>
-      ${BRAND}
     </div>
   </div>
 </div>`;

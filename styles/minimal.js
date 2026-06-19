@@ -10,18 +10,18 @@ window.PTW_STYLES.minimal = {
 .style-minimal{position:relative;}
 .style-minimal .mn-line{position:absolute;left:0;top:0;width:100%;height:3px;background:var(--coral);z-index:6;}
 .style-minimal .mn-body{position:relative;z-index:5;flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;min-height:0;}
-.style-minimal .mn-idx{position:absolute;right:84px;bottom:56px;font-size:13px;font-weight:700;letter-spacing:.1em;color:var(--muted);opacity:.5;z-index:6;}
+.style-minimal .mn-idx{position:absolute;right:84px;bottom:96px;font-size:13px;font-weight:700;letter-spacing:.1em;color:var(--muted);opacity:.5;z-index:6;}
 .style-minimal.dark .mn-idx,.style-minimal.coral .mn-idx{color:currentColor;opacity:.55;}
 
 .style-minimal .mn-eyebrow{font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);opacity:.7;}
 .style-minimal.dark .mn-eyebrow{color:rgba(241,239,244,.55);}
 .style-minimal .mn-heading{font-size:50px;font-weight:900;letter-spacing:-.03em;line-height:1.12;margin-top:20px;max-width:18ch;}
-.style-minimal .mn-body-txt{font-size:19px;font-weight:300;line-height:1.7;color:var(--muted);max-width:30ch;margin-top:24px;}
+.style-minimal .mn-body-txt{font-size:21px;font-weight:400;line-height:1.6;color:var(--muted);max-width:30ch;margin-top:24px;}
 .style-minimal.dark .mn-body-txt{color:rgba(241,239,244,.6);}
 .style-minimal.coral .mn-body-txt{color:rgba(255,255,255,.85);}
 
 .style-minimal .mn-tip{padding:20px 0 0;margin-top:22px;max-width:540px;border-top:1px solid currentColor;opacity:.92;}
-.style-minimal .mn-tip .mn-tt{font-size:16px;line-height:1.55;font-weight:400;}
+.style-minimal .mn-tip .mn-tt{font-size:17px;line-height:1.55;font-weight:400;}
 .style-minimal .mn-tip .mn-tt b{color:var(--coral);font-weight:700;}
 
 /* ============ SLIDE — COVER ============ */
@@ -29,14 +29,14 @@ window.PTW_STYLES.minimal = {
 .style-minimal.cover h1 .c{color:var(--coral);}
 .style-minimal.cover .mn-sub{font-size:19px;line-height:1.6;color:var(--muted);font-weight:300;max-width:30ch;margin-top:26px;}
 .style-minimal.cover.dark .mn-sub{color:rgba(241,239,244,.55);}
-.style-minimal .mn-swipe{position:absolute;right:84px;bottom:56px;z-index:6;font-size:13px;font-weight:700;letter-spacing:.06em;color:var(--coral);}
+.style-minimal .mn-swipe{position:absolute;right:84px;bottom:96px;z-index:6;font-size:13px;font-weight:700;letter-spacing:.06em;color:var(--coral);}
 
 /* ============ SLIDE — STATS ============ */
 .style-minimal .mn-stats-head{margin-bottom:38px;}
 .style-minimal .mn-grid2{display:grid;grid-template-columns:1fr 1fr;gap:34px 44px;max-width:760px;}
 .style-minimal .mn-stat{border-top:1px solid currentColor;opacity:.95;padding-top:20px;}
 .style-minimal .mn-stat .mn-num{font-size:54px;font-weight:900;letter-spacing:-.03em;line-height:1;}
-.style-minimal .mn-stat .mn-lab{font-size:15px;line-height:1.45;font-weight:400;margin-top:10px;max-width:22ch;color:var(--muted);}
+.style-minimal .mn-stat .mn-lab{font-size:16px;line-height:1.45;font-weight:400;margin-top:10px;max-width:22ch;color:var(--muted);}
 .style-minimal.dark .mn-stat .mn-lab{color:rgba(241,239,244,.6);}
 
 /* ============ SLIDE — CTA ============ */

@@ -15,7 +15,7 @@ window.PTW_STYLES.geometric = {
 .style-geometric .sg-tag{font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--coral);display:inline-flex;align-items:center;gap:10px;}
 .style-geometric .sg-tag::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--coral);display:inline-block;}
 .style-geometric .sg-heading{font-size:50px;font-weight:900;letter-spacing:-.035em;line-height:1.08;margin-top:20px;}
-.style-geometric .sg-body-txt{font-size:18px;font-weight:400;line-height:1.65;color:var(--muted);max-width:30ch;margin-top:22px;}
+.style-geometric .sg-body-txt{font-size:21px;font-weight:400;line-height:1.6;color:var(--muted);max-width:30ch;margin-top:22px;}
 .style-geometric.dark .sg-body-txt{color:rgba(241,239,244,.62);}
 .style-geometric.coral .sg-body-txt{color:rgba(255,255,255,.85);}
 
@@ -23,7 +23,7 @@ window.PTW_STYLES.geometric = {
 .style-geometric .sg-tip{display:flex;align-items:center;gap:16px;border-radius:4px;padding:22px 26px;margin-top:28px;max-width:560px;border:1px solid var(--coral);position:relative;}
 .style-geometric .sg-tip::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--coral);}
 .style-geometric .sg-tip .sg-ico{font-size:26px;line-height:1;flex:0 0 auto;}
-.style-geometric .sg-tip .sg-tt{font-size:16px;line-height:1.5;font-weight:500;}
+.style-geometric .sg-tip .sg-tt{font-size:17px;line-height:1.5;font-weight:500;}
 .style-geometric .sg-tip .sg-tt b{color:var(--coral);font-weight:700;}
 
 /* ============ SLIDE — COVER ============ */
@@ -48,7 +48,7 @@ window.PTW_STYLES.geometric = {
 .style-geometric .sg-grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
 .style-geometric .sg-stat{position:relative;padding:30px 28px;border-left:3px solid var(--coral);}
 .style-geometric .sg-stat .sg-num{font-size:60px;font-weight:900;color:var(--coral);letter-spacing:-.04em;line-height:1;}
-.style-geometric .sg-stat .sg-lab{font-size:15px;line-height:1.45;font-weight:500;margin-top:12px;max-width:22ch;color:var(--muted);}
+.style-geometric .sg-stat .sg-lab{font-size:16px;line-height:1.45;font-weight:500;margin-top:12px;max-width:22ch;color:var(--muted);}
 .style-geometric.dark .sg-stat .sg-lab{color:rgba(241,239,244,.65);}
 
 /* ============ SLIDE — CTA ============ */

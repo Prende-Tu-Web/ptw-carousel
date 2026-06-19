@@ -18,13 +18,13 @@ window.PTW_STYLES.editorial = {
 .style-editorial .sa-tag{font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--coral);}
 .style-editorial .sa-rule{width:100%;max-width:420px;height:1px;background:currentColor;opacity:.15;margin-top:18px;}
 .style-editorial .sa-heading{font-size:54px;font-weight:900;letter-spacing:-.03em;line-height:1.08;margin-top:18px;max-width:17ch;}
-.style-editorial .sa-body-txt{font-size:19px;font-weight:400;line-height:1.65;color:var(--muted);max-width:30ch;margin-top:24px;}
+.style-editorial .sa-body-txt{font-size:21px;font-weight:400;line-height:1.6;color:var(--muted);max-width:30ch;margin-top:24px;}
 .style-editorial.dark .sa-body-txt{color:rgba(241,239,244,.62);}
 .style-editorial.coral .sa-body-txt{color:rgba(255,255,255,.85);}
 
 .style-editorial .sa-tip{display:flex;align-items:center;gap:16px;padding:22px 26px;margin-top:26px;max-width:560px;border-left:3px solid var(--coral);background:rgba(255,99,143,.06);}
 .style-editorial .sa-tip .sa-ico{font-size:24px;line-height:1;flex:0 0 auto;}
-.style-editorial .sa-tip .sa-tt{font-size:16px;line-height:1.5;font-weight:500;}
+.style-editorial .sa-tip .sa-tt{font-size:17px;line-height:1.5;font-weight:500;}
 .style-editorial .sa-tip .sa-tt b{color:var(--coral);font-weight:700;}
 
 /* ============ SLIDE — COVER ============ */
@@ -41,7 +41,7 @@ window.PTW_STYLES.editorial = {
 .style-editorial .sa-grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px;max-width:780px;}
 .style-editorial .sa-stat{padding-left:20px;border-left:3px solid var(--coral);}
 .style-editorial .sa-stat .sa-num{font-size:62px;font-weight:900;color:var(--coral);letter-spacing:-.04em;line-height:1;}
-.style-editorial .sa-stat .sa-lab{font-size:15px;line-height:1.45;font-weight:500;margin-top:12px;max-width:22ch;color:var(--muted);}
+.style-editorial .sa-stat .sa-lab{font-size:16px;line-height:1.45;font-weight:500;margin-top:12px;max-width:22ch;color:var(--muted);}
 .style-editorial.dark .sa-stat .sa-lab{color:rgba(241,239,244,.65);}
 
 /* ============ SLIDE — CTA ============ */
