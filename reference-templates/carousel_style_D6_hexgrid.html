@@ -1,0 +1,67 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;700;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+.lbl{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:8px;}
+.row{display:flex;gap:16px;padding:.5rem 0 1rem;}
+.sl{width:320px;height:320px;flex-shrink:0;overflow:hidden;font-family:'Rubik',sans-serif;border-radius:12px;position:relative;}
+
+.d6a{background:#ff638f;}
+.d6a .content{position:relative;z-index:2;padding:32px;height:100%;display:flex;flex-direction:column;justify-content:space-between;}
+.d6a .tag{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.55);}
+.d6a h2{font-size:34px;font-weight:900;color:#fff;line-height:1.0;letter-spacing:-.03em;}
+.d6a h2 .inv{color:#111a1b;}
+.d6a .sub{font-size:12px;color:rgba(255,255,255,.7);line-height:1.5;max-width:200px;}
+.d6a .handle{font-size:11px;color:rgba(255,255,255,.4);}
+
+.d6b{background:#111a1b;}
+.d6b .content{position:relative;z-index:2;padding:32px;height:100%;display:flex;flex-direction:column;justify-content:space-between;}
+.d6b .idx{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(241,239,244,.25);}
+.d6b h3{font-size:22px;font-weight:900;color:#f1eff4;line-height:1.15;letter-spacing:-.01em;margin-top:8px;}
+.d6b .body{font-size:12.5px;line-height:1.65;color:rgba(241,239,244,.55);}
+.d6b .footer{display:flex;justify-content:space-between;align-items:center;}
+.d6b .handle{font-size:11px;color:rgba(241,239,244,.2);}
+.d6b .sq{width:24px;height:24px;background:#ff638f;border-radius:4px;}
+</style>
+
+<p class="lbl">Variación D6 — Rombos y cuadrícula angular</p>
+<div class="row">
+  <div class="sl d6a">
+    <svg style="position:absolute;inset:0;width:100%;height:100%" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+      <rect x="200" y="-60" width="120" height="120" rx="12" fill="white" opacity=".07" transform="rotate(45 260 0)"/>
+      <rect x="220" y="-40" width="80" height="80" rx="8" fill="white" opacity=".06" transform="rotate(45 260 0)"/>
+      <rect x="-60" y="220" width="100" height="100" rx="8" fill="white" opacity=".06" transform="rotate(45 -10 270)"/>
+      <rect x="-40" y="240" width="60" height="60" rx="6" fill="white" opacity=".08" transform="rotate(45 -10 270)"/>
+      <line x1="0" y1="180" x2="320" y2="180" stroke="white" stroke-width=".5" opacity=".12"/>
+    </svg>
+    <div class="content">
+      <div class="tag">Prende Tu Web · Diseño Web</div>
+      <div>
+        <h2>El diseño que<br><span class="inv">no convierte</span><br>es decoración<br>cara.</h2>
+      </div>
+      <div>
+        <div class="sub">Qué diferencia una web que vende de una que solo se ve bien.</div>
+        <div class="handle" style="margin-top:14px;">@prendetuweb.cl</div>
+      </div>
+    </div>
+  </div>
+  <div class="sl d6b">
+    <svg style="position:absolute;inset:0;width:100%;height:100%" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+      <rect x="210" y="190" width="140" height="140" rx="10" fill="#ff638f" opacity=".06" transform="rotate(45 280 260)"/>
+      <rect x="230" y="210" width="100" height="100" rx="8" fill="#ff638f" opacity=".07" transform="rotate(45 280 260)"/>
+      <rect x="250" y="230" width="60" height="60" rx="6" fill="#ff638f" opacity=".08" transform="rotate(45 280 260)"/>
+      <line x1="0" y1="60" x2="320" y2="60" stroke="#ff638f" stroke-width=".5" opacity=".1"/>
+    </svg>
+    <div class="content">
+      <div class="idx">02 / 05</div>
+      <div>
+        <h3>Formularios de contacto que generan fricción innecesaria</h3>
+        <div class="body" style="margin-top:10px;">Más de 5 campos en un formulario B2B reduce la conversión hasta un 50%. Pide solo lo que necesitas para el primer contacto — el resto lo consigues en la llamada.</div>
+      </div>
+      <div class="footer">
+        <div class="handle">@prendetuweb.cl</div>
+        <div class="sq"></div>
+      </div>
+    </div>
+  </div>
+</div>

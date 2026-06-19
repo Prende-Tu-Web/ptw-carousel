@@ -1,0 +1,60 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;700;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+.label{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--color-text-secondary);}
+.slides-row{display:flex;gap:16px;padding:1rem 0;}
+.slide{width:320px;height:320px;flex-shrink:0;position:relative;overflow:hidden;font-family:'Rubik',sans-serif;border-radius:12px;}
+
+.sA1{background:#111a1b;color:#f1eff4;}
+.sA1 .accent-bar{position:absolute;left:0;top:0;width:5px;height:100%;background:#ff638f;}
+.sA1 .num{position:absolute;right:24px;bottom:16px;font-size:120px;font-weight:900;color:rgba(255,99,143,.12);line-height:1;letter-spacing:-6px;}
+.sA1 .content{padding:36px 28px 28px 36px;height:100%;display:flex;flex-direction:column;justify-content:space-between;}
+.sA1 .tag{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#ff638f;}
+.sA1 h2{font-size:28px;font-weight:900;line-height:1.1;letter-spacing:-.02em;color:#f1eff4;margin-top:12px;}
+.sA1 .body{font-size:13px;line-height:1.6;color:rgba(241,239,244,.65);margin-top:auto;}
+.sA1 .handle{font-size:11px;color:rgba(241,239,244,.4);font-weight:500;}
+
+.sA2{background:#f1eff4;color:#111a1b;}
+.sA2 .accent-bar{position:absolute;left:0;top:0;width:5px;height:100%;background:#ff638f;}
+.sA2 .num{position:absolute;right:24px;bottom:16px;font-size:120px;font-weight:900;color:rgba(17,26,27,.06);line-height:1;letter-spacing:-6px;}
+.sA2 .content{padding:36px 28px 28px 36px;height:100%;display:flex;flex-direction:column;justify-content:space-between;}
+.sA2 .tag{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#ff638f;}
+.sA2 h2{font-size:26px;font-weight:900;line-height:1.1;letter-spacing:-.02em;color:#111a1b;margin-top:12px;}
+.sA2 .body{font-size:13px;line-height:1.6;color:rgba(17,26,27,.65);margin-top:auto;}
+.sA2 .handle{font-size:11px;color:rgba(17,26,27,.4);font-weight:500;}
+</style>
+
+<h2 class="sr-only">Tres estilos de diseño para carousel de LinkedIn — Estilo A: Editorial asimétrico</h2>
+
+<p class="label" style="margin-bottom:8px;">Estilo A — Editorial asimétrico</p>
+<div class="slides-row">
+  <div class="slide sA1">
+    <div class="accent-bar"></div>
+    <div class="num" aria-hidden="true">01</div>
+    <div class="content">
+      <div>
+        <div class="tag">SEO técnico · 2026</div>
+        <h2>Tu web existe.<br>Google no<br>lo sabe aún.</h2>
+      </div>
+      <div>
+        <div class="body">5 señales de que tu arquitectura está bloqueando el crawling — y cómo resolverlo hoy.</div>
+        <div class="handle" style="margin-top:16px;">@prendetuweb.cl</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide sA2">
+    <div class="accent-bar"></div>
+    <div class="num" aria-hidden="true">02</div>
+    <div class="content">
+      <div>
+        <div class="tag">Señal #1</div>
+        <h2>El robots.txt está bloqueando lo que no debería.</h2>
+      </div>
+      <div>
+        <div class="body">Un solo <code style="background:rgba(255,99,143,.12);color:#ff638f;padding:1px 5px;border-radius:4px;">Disallow: /</code> mal puesto puede dejar tu sitio invisible. Revísalo antes de buscar otras causas.</div>
+        <div class="handle" style="margin-top:16px;">@prendetuweb.cl</div>
+      </div>
+    </div>
+  </div>
+</div>

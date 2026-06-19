@@ -1,0 +1,63 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;700;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+.lbl{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:8px;}
+.row{display:flex;gap:16px;padding:.5rem 0 1rem;}
+.sl{width:320px;height:320px;flex-shrink:0;overflow:hidden;font-family:'Rubik',sans-serif;border-radius:12px;position:relative;}
+
+.sD1{background:#f1eff4;}
+.sD1 svg.bg{position:absolute;inset:0;width:100%;height:100%;}
+.sD1 .content{position:relative;z-index:2;padding:32px;height:100%;display:flex;flex-direction:column;justify-content:space-between;}
+.sD1 .tag{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#ff638f;}
+.sD1 h2{font-size:30px;font-weight:900;line-height:1.05;letter-spacing:-.03em;color:#111a1b;margin-top:12px;}
+.sD1 .bottom{display:flex;justify-content:space-between;align-items:flex-end;}
+.sD1 .sub{font-size:12px;color:rgba(17,26,27,.5);line-height:1.45;max-width:170px;}
+.sD1 .dot{width:10px;height:10px;border-radius:50%;background:#ff638f;}
+
+.sD2{background:#111a1b;}
+.sD2 svg.bg{position:absolute;inset:0;width:100%;height:100%;}
+.sD2 .content{position:relative;z-index:2;padding:32px;height:100%;display:flex;flex-direction:column;justify-content:space-between;}
+.sD2 .idx{font-size:11px;font-weight:700;letter-spacing:.1em;color:rgba(241,239,244,.3);text-transform:uppercase;}
+.sD2 h3{font-size:22px;font-weight:900;color:#f1eff4;line-height:1.15;letter-spacing:-.01em;margin-top:8px;}
+.sD2 .body{font-size:12.5px;line-height:1.65;color:rgba(241,239,244,.6);}
+.sD2 .pill{display:inline-block;background:#ff638f;color:#fff;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:4px;margin-top:12px;}
+.sD2 .handle{font-size:11px;color:rgba(241,239,244,.25);}
+</style>
+
+<p class="lbl">Estilo D — Geométrico con formas de fondo</p>
+<div class="row">
+  <div class="sl sD1">
+    <svg class="bg" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="280" cy="60" r="90" fill="none" stroke="#ff638f" stroke-width="1" opacity=".25"/>
+      <circle cx="280" cy="60" r="55" fill="none" stroke="#ff638f" stroke-width="1" opacity=".2"/>
+      <circle cx="280" cy="60" r="22" fill="#ff638f" opacity=".12"/>
+      <line x1="0" y1="260" x2="320" y2="260" stroke="#111a1b" stroke-width=".5" opacity=".08"/>
+    </svg>
+    <div class="content">
+      <div>
+        <div class="tag">Prende Tu Web · GEO</div>
+        <h2>Los AI bots<br>rastrean tu web.<br>¿La encuentran?</h2>
+      </div>
+      <div class="bottom">
+        <div class="sub">Cómo optimizar tu presencia para motores de IA en 2026.</div>
+        <div class="dot"></div>
+      </div>
+    </div>
+  </div>
+  <div class="sl sD2">
+    <svg class="bg" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="40" cy="280" r="110" fill="none" stroke="#ff638f" stroke-width="1" opacity=".15"/>
+      <circle cx="40" cy="280" r="65" fill="none" stroke="#ff638f" stroke-width="1" opacity=".12"/>
+    </svg>
+    <div class="content">
+      <div>
+        <div class="idx">01 / 05</div>
+        <h3>Falta de datos estructurados legibles por LLMs</h3>
+        <div class="body" style="margin-top:12px;">ChatGPT y Perplexity priorizan páginas con Schema.org bien implementado. Sin eso, tu contenido existe pero ningún AI lo cita.</div>
+        <div class="pill">Acción concreta</div>
+      </div>
+      <div class="handle">@prendetuweb.cl</div>
+    </div>
+  </div>
+</div>

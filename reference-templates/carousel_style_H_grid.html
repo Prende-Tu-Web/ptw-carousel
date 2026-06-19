@@ -1,0 +1,58 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;700;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+.lbl{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:8px;}
+.row{display:flex;gap:16px;padding:.5rem 0 1rem;}
+.sl{width:320px;height:320px;flex-shrink:0;overflow:hidden;font-family:'Rubik',sans-serif;border-radius:12px;position:relative;}
+
+.sH1{background:#111a1b;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;}
+.sH1 .q{padding:22px;display:flex;flex-direction:column;justify-content:space-between;border:0.5px solid rgba(241,239,244,.06);}
+.sH1 .q.main{grid-column:1/3;background:#ff638f;padding:26px;}
+.sH1 .q.main h2{font-size:26px;font-weight:900;color:#fff;line-height:1.05;letter-spacing:-.02em;}
+.sH1 .q.main .tag{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:10px;}
+.sH1 .q.main .sub{font-size:11.5px;color:rgba(255,255,255,.75);margin-top:10px;}
+.sH1 .q.stat .n{font-size:38px;font-weight:900;color:#ff638f;line-height:1;letter-spacing:-.03em;}
+.sH1 .q.stat .desc{font-size:11px;color:rgba(241,239,244,.45);line-height:1.4;margin-top:4px;}
+.sH1 .q.handle-q{justify-content:flex-end;}
+.sH1 .q.handle-q .handle{font-size:10px;color:rgba(241,239,244,.2);font-weight:700;letter-spacing:.08em;}
+
+.sH2{background:#f1eff4;padding:28px;display:flex;flex-direction:column;justify-content:space-between;}
+.sH2 .top{display:flex;align-items:flex-start;justify-content:space-between;}
+.sH2 .chip{background:#111a1b;color:#f1eff4;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:4px;}
+.sH2 .prog{font-size:11px;font-weight:700;color:rgba(17,26,27,.3);letter-spacing:.08em;}
+.sH2 h3{font-size:22px;font-weight:900;color:#111a1b;line-height:1.15;letter-spacing:-.02em;}
+.sH2 .body{font-size:12.5px;line-height:1.65;color:rgba(17,26,27,.6);}
+.sH2 .tag-inline{display:inline;background:#ff638f;color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px;margin-right:4px;vertical-align:middle;}
+.sH2 .handle{font-size:11px;color:rgba(17,26,27,.25);}
+</style>
+
+<p class="lbl">Estilo H — Grid modular (slide resumen con stats)</p>
+<div class="row">
+  <div class="sl sH1">
+    <div class="q main">
+      <div class="tag">Prende Tu Web · SEO Técnico</div>
+      <h2>¿Cuánto te<br>cuesta no<br>indexar bien?</h2>
+      <div class="sub">Números reales de sitios B2B chilenos en 2025.</div>
+    </div>
+    <div class="q stat">
+      <div class="n">68%</div>
+      <div class="desc">de las webs B2B tienen errores de crawling sin saberlo</div>
+    </div>
+    <div class="q stat">
+      <div class="n">3×</div>
+      <div class="desc">más tráfico orgánico con SEO técnico bien implementado</div>
+    </div>
+  </div>
+  <div class="sl sH2">
+    <div class="top">
+      <div class="chip">Problema 05</div>
+      <div class="prog">5/6</div>
+    </div>
+    <div>
+      <h3>Páginas lentas que Google castiga silenciosamente</h3>
+      <div class="body" style="margin-top:10px;">El <span class="tag-inline">LCP</span> por encima de 2.5s es suficiente para que Google baje tu posición — sin notificarte. La mayoría de webs WordPress no tienen esto resuelto por defecto.</div>
+    </div>
+    <div class="handle">@prendetuweb.cl</div>
+  </div>
+</div>

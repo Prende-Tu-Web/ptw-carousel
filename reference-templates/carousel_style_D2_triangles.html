@@ -1,0 +1,65 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;700;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+.lbl{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:8px;}
+.row{display:flex;gap:16px;padding:.5rem 0 1rem;}
+.sl{width:320px;height:320px;flex-shrink:0;overflow:hidden;font-family:'Rubik',sans-serif;border-radius:12px;position:relative;}
+
+.d2a{background:#111a1b;}
+.d2a .content{position:relative;z-index:2;padding:32px;height:100%;display:flex;flex-direction:column;justify-content:space-between;}
+.d2a .tag{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(241,239,244,.3);}
+.d2a h2{font-size:32px;font-weight:900;color:#f1eff4;line-height:1.0;letter-spacing:-.03em;}
+.d2a h2 em{color:#ff638f;font-style:normal;}
+.d2a .sub{font-size:12px;color:rgba(241,239,244,.45);line-height:1.5;max-width:200px;}
+.d2a .handle{font-size:11px;color:rgba(241,239,244,.2);}
+
+.d2b{background:#f1eff4;}
+.d2b .content{position:relative;z-index:2;padding:32px;height:100%;display:flex;flex-direction:column;justify-content:space-between;}
+.d2b .idx{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(17,26,27,.3);}
+.d2b h3{font-size:22px;font-weight:900;color:#111a1b;line-height:1.15;letter-spacing:-.01em;margin-top:8px;}
+.d2b .body{font-size:12.5px;line-height:1.65;color:rgba(17,26,27,.6);}
+.d2b .footer{display:flex;justify-content:space-between;align-items:flex-end;}
+.d2b .handle{font-size:11px;color:rgba(17,26,27,.25);}
+.d2b .prog{font-size:10px;font-weight:700;color:rgba(17,26,27,.25);letter-spacing:.08em;text-transform:uppercase;}
+</style>
+
+<p class="lbl">Variación D2 — Triángulos esquineros</p>
+<div class="row">
+  <div class="sl d2a">
+    <svg style="position:absolute;inset:0;width:100%;height:100%" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="320,0 320,160 160,0" fill="#ff638f" opacity=".09"/>
+      <polygon points="320,0 320,90 230,0" fill="#ff638f" opacity=".13"/>
+      <polygon points="0,320 0,220 100,320" fill="#ff638f" opacity=".06"/>
+      <line x1="0" y1="270" x2="320" y2="270" stroke="#ff638f" stroke-width=".5" opacity=".12"/>
+    </svg>
+    <div class="content">
+      <div class="tag">Prende Tu Web · B2B</div>
+      <div>
+        <h2>Tu web habla.<br>¿Dice lo<br>que <em>debes</em><br>decir?</h2>
+      </div>
+      <div>
+        <div class="sub">Diagnóstico de mensajería B2B para sitios corporativos chilenos.</div>
+        <div class="handle" style="margin-top:14px;">@prendetuweb.cl</div>
+      </div>
+    </div>
+  </div>
+  <div class="sl d2b">
+    <svg style="position:absolute;inset:0;width:100%;height:100%" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="0,0 120,0 0,120" fill="#ff638f" opacity=".07"/>
+      <polygon points="0,0 60,0 0,60" fill="#ff638f" opacity=".1"/>
+      <polygon points="320,320 200,320 320,200" fill="#111a1b" opacity=".04"/>
+    </svg>
+    <div class="content">
+      <div class="idx">01 / 05</div>
+      <div>
+        <h3>No queda claro qué hace tu empresa en 5 segundos</h3>
+        <div class="body" style="margin-top:10px;">El visitante B2B decide si sigue en tu sitio antes del primer scroll. Si tu propuesta de valor no es obvia al instante, ya perdiste la atención más valiosa.</div>
+      </div>
+      <div class="footer">
+        <div class="handle">@prendetuweb.cl</div>
+        <div class="prog">1 / 5</div>
+      </div>
+    </div>
+  </div>
+</div>

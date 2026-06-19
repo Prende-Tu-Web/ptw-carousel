@@ -81,105 +81,10 @@ body{padding:0 0 80px;}
 .slide.coral .bar .logo b{color:#fff;}
 .bar .url{font-size:12px;font-weight:500;letter-spacing:.04em;opacity:.7;}
 
-/* content region fills middle */
-.body{flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:5;min-height:0;}
-
-/* shared type */
-.tag{font-size:13px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--coral);display:inline-flex;align-items:center;gap:12px;}
-.tag::before{content:"";width:26px;height:2px;background:var(--coral);display:inline-block;}
-.h-content{font-size:52px;font-weight:800;letter-spacing:-.035em;line-height:1.08;margin:22px 0 0;}
-.p-body{font-size:18px;font-weight:400;line-height:1.65;color:var(--muted);max-width:30ch;margin-top:22px;}
-.slide.dark .p-body{color:#9aa0a6;}
-
-/* decorative big number */
-.bignum{position:absolute;font-weight:900;line-height:.8;letter-spacing:-.04em;z-index:0;pointer-events:none;}
-.slide.light .bignum{color:rgba(17,26,27,.05);}
-.slide.dark .bignum{color:rgba(241,239,244,.05);}
-
-/* tip card */
-.tip{
-  display:flex;align-items:center;gap:18px;background:var(--dark);color:var(--light);
-  border-radius:18px;padding:24px 28px;margin-top:30px;max-width:560px;
-}
-.slide.dark .tip{background:#1b262a;border:1px solid rgba(255,255,255,.07);}
-.tip .ico{font-size:30px;line-height:1;flex:0 0 auto;}
-.tip .tt{font-size:16px;line-height:1.5;font-weight:500;}
-.tip .tt b{color:var(--coral);font-weight:700;}
-
 /* editable affordance */
 [contenteditable]{outline:none;border-radius:4px;transition:box-shadow .15s,background .15s;}
 [contenteditable]:hover{box-shadow:0 0 0 1.5px rgba(255,99,143,.4);}
 [contenteditable]:focus{box-shadow:0 0 0 2px var(--coral);background:rgba(255,99,143,.06);}
-
-/* ============ SLIDE — COVER ============ */
-.cover{padding-top:64px;}
-.cover .dots{
-  position:absolute;inset:0;z-index:0;opacity:.9;
-  background-image:radial-gradient(rgba(255,99,143,.22) 2px,transparent 2px);
-  background-size:46px 46px;animation:drift 9s linear infinite;
-}
-.cover .glow{
-  position:absolute;left:50%;top:46%;width:760px;height:760px;transform:translate(-50%,-50%);
-  background:radial-gradient(circle,rgba(255,99,143,.42) 0%,rgba(255,99,143,.10) 38%,transparent 64%);
-  z-index:1;animation:glow 6s ease-in-out infinite;filter:blur(2px);
-}
-.cover .body{align-items:flex-start;text-align:left;}
-.cover .eyebrow{font-size:13px;font-weight:700;letter-spacing:.32em;text-transform:uppercase;color:var(--coral);}
-.cover h1{
-  font-size:72px;font-weight:900;letter-spacing:-.04em;line-height:1.02;margin-top:26px;max-width:14ch;
-}
-.cover h1 .c{color:var(--coral);}
-.cover .sub{font-size:20px;line-height:1.55;color:#9aa0a6;max-width:30ch;margin-top:28px;font-weight:400;}
-.particle{position:absolute;width:9px;height:9px;border-radius:50%;background:var(--coral);z-index:2;opacity:0;box-shadow:0 0 14px rgba(255,99,143,.7);}
-.p1{left:14%;bottom:24%;animation:rise 7s ease-in 0s infinite;}
-.p2{left:30%;bottom:16%;animation:rise 9s ease-in 1.4s infinite;width:6px;height:6px;}
-.p3{left:62%;bottom:30%;animation:rise 8s ease-in .7s infinite;}
-.p4{left:80%;bottom:20%;animation:rise 10s ease-in 2.2s infinite;width:7px;height:7px;}
-.p5{left:46%;bottom:12%;animation:rise 8.5s ease-in 3.1s infinite;width:5px;height:5px;}
-.swipe{
-  position:absolute;right:84px;bottom:120px;z-index:6;display:flex;align-items:center;gap:10px;
-  color:var(--coral);font-size:15px;font-weight:700;letter-spacing:.04em;
-}
-.swipe .arw{display:inline-block;animation:arrow 1.3s ease-in-out infinite;font-size:18px;}
-
-/* ============ SLIDE — STATS ============ */
-.stats-head{margin-bottom:34px;}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
-.stat{
-  background:#fff;border-radius:20px;padding:34px 32px;position:relative;overflow:hidden;
-  box-shadow:0 10px 30px -16px rgba(17,26,27,.2);
-}
-.stat::before{content:"";position:absolute;top:0;left:0;right:0;height:5px;background:var(--coral);transform:scaleX(0);transform-origin:left;transition:transform .5s cubic-bezier(.2,.7,.3,1);}
-.stat:hover::before,.frame.live .stat::before{transform:scaleX(1);}
-.stat .num{font-size:64px;font-weight:900;color:var(--coral);letter-spacing:-.04em;line-height:1;}
-.stat .lab{font-size:15px;line-height:1.45;color:#3d4145;font-weight:500;margin-top:14px;max-width:22ch;}
-
-/* ============ SLIDE — CTA ============ */
-.cta .dots{
-  position:absolute;inset:0;z-index:0;
-  background-image:radial-gradient(rgba(255,255,255,.26) 2px,transparent 2px);
-  background-size:46px 46px;animation:drift 9s linear infinite;
-}
-.cta .body{align-items:center;text-align:center;z-index:5;}
-.cta .eyebrow{font-size:13px;font-weight:700;letter-spacing:.32em;text-transform:uppercase;color:rgba(255,255,255,.85);}
-.cta h1{font-size:66px;font-weight:900;letter-spacing:-.04em;line-height:1.04;color:#fff;max-width:15ch;margin-top:24px;}
-.cta .sub{font-size:19px;line-height:1.55;color:rgba(255,255,255,.9);max-width:32ch;margin-top:24px;font-weight:400;}
-.pill{
-  display:inline-flex;align-items:center;gap:12px;background:#fff;color:var(--dark);
-  font-size:18px;font-weight:700;letter-spacing:.01em;padding:20px 38px;border-radius:999px;margin-top:38px;
-  box-shadow:0 18px 40px -14px rgba(17,26,27,.45);
-}
-.pill .arw{color:var(--coral);font-size:20px;}
-.cta .handle{margin-top:26px;font-size:15px;font-weight:700;letter-spacing:.06em;color:#fff;opacity:.95;}
-
-@media (prefers-reduced-motion: reduce){
-  .cover .dots,.cta .dots,.cover .glow,.particle,.swipe .arw{animation:none !important;}
-  .particle{opacity:.6;}
-}
-@keyframes drift{from{background-position:0 0;}to{background-position:46px 46px;}}
-@keyframes glow{0%,100%{opacity:.55;transform:translate(-50%,-50%) scale(1);}50%{opacity:.85;transform:translate(-50%,-50%) scale(1.07);}}
-@keyframes rise{0%{transform:translateY(0);opacity:0;}12%{opacity:.8;}88%{opacity:.8;}100%{transform:translateY(-230px);opacity:0;}}
-@keyframes arrow{0%,100%{transform:translateX(0);}50%{transform:translateX(9px);}}
 
 /* brand stripes (franjas del logo) */
 .mark .franjas{display:flex;align-items:flex-end;gap:7px;height:30px;}
@@ -189,6 +94,7 @@ body{padding:0 0 80px;}
 .mark .franjas i:nth-child(3){height:23px;}
 .slide.coral .mark .franjas i{background:#fff;}
 </style>
+<!--STYLE_CSS-->
 </head>
 <body>
 

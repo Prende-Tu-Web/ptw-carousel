@@ -1,0 +1,76 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;700;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+.lbl{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:8px;}
+.row{display:flex;gap:16px;padding:.5rem 0 1rem;}
+.sl{width:320px;height:320px;flex-shrink:0;overflow:hidden;font-family:'Rubik',sans-serif;border-radius:12px;position:relative;}
+
+.sG1{background:#ff638f;}
+.sG1 .lines{position:absolute;inset:0;}
+.sG1 .content{position:relative;z-index:2;padding:28px;height:100%;display:flex;flex-direction:column;justify-content:space-between;}
+.sG1 .header{display:flex;align-items:center;justify-content:space-between;}
+.sG1 .brand{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.7);}
+.sG1 .num-sm{font-size:11px;font-weight:700;color:rgba(255,255,255,.5);}
+.sG1 h2{font-size:42px;font-weight:900;color:#fff;line-height:.95;letter-spacing:-.04em;}
+.sG1 h2 .thin{font-weight:300;display:block;}
+.sG1 .bottom{border-top:1px solid rgba(255,255,255,.25);padding-top:14px;display:flex;justify-content:space-between;align-items:flex-end;}
+.sG1 .sub{font-size:11.5px;color:rgba(255,255,255,.8);max-width:180px;line-height:1.4;}
+.sG1 .handle{font-size:11px;color:rgba(255,255,255,.5);}
+
+.sG2{background:#f1eff4;}
+.sG2 .content{padding:28px;height:100%;display:flex;flex-direction:column;justify-content:space-between;}
+.sG2 .header{display:flex;align-items:center;gap:10px;}
+.sG2 .chip{background:#ff638f;color:#fff;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:4px;}
+.sG2 .prog{font-size:10px;font-weight:700;color:rgba(17,26,27,.3);letter-spacing:.1em;text-transform:uppercase;}
+.sG2 .mid{flex:1;display:flex;flex-direction:column;justify-content:center;gap:10px;padding:8px 0;}
+.sG2 h3{font-size:23px;font-weight:900;color:#111a1b;line-height:1.15;letter-spacing:-.02em;}
+.sG2 .divider{height:2px;background:#ff638f;width:32px;border-radius:2px;}
+.sG2 .body{font-size:12.5px;line-height:1.65;color:rgba(17,26,27,.6);}
+.sG2 .bottom{display:flex;justify-content:space-between;align-items:center;}
+.sG2 .handle{font-size:11px;color:rgba(17,26,27,.3);}
+.sG2 .arr{width:28px;height:28px;border-radius:50%;background:#111a1b;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:900;}
+</style>
+
+<p class="lbl">Estilo G — Poster con tipografía mixta (bold + thin)</p>
+<div class="row">
+  <div class="sl sG1">
+    <svg class="lines" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+      <line x1="0" y1="200" x2="320" y2="200" stroke="white" stroke-width=".5" opacity=".15"/>
+      <line x1="0" y1="210" x2="320" y2="210" stroke="white" stroke-width=".5" opacity=".08"/>
+    </svg>
+    <div class="content">
+      <div class="header">
+        <div class="brand">Prende Tu Web</div>
+        <div class="num-sm">2026</div>
+      </div>
+      <h2>
+        <span class="thin">El SEO</span>
+        TÉCNICO<br>
+        <span class="thin">que</span>
+        FUNCIONA
+      </h2>
+      <div class="bottom">
+        <div class="sub">Guía práctica para agencias y empresas con web propia.</div>
+        <div class="handle">@prendetuweb.cl</div>
+      </div>
+    </div>
+  </div>
+  <div class="sl sG2">
+    <div class="content">
+      <div class="header">
+        <div class="chip">Tip 04</div>
+        <div class="prog">04 / 06</div>
+      </div>
+      <div class="mid">
+        <h3>Core Web Vitals por debajo del umbral de Google</h3>
+        <div class="divider"></div>
+        <div class="body">LCP, CLS e INP son métricas de experiencia que Google usa como señal de ranking. Una imagen sin optimizar puede hundirte en resultados sin que te enteres.</div>
+      </div>
+      <div class="bottom">
+        <div class="handle">@prendetuweb.cl</div>
+        <div class="arr">→</div>
+      </div>
+    </div>
+  </div>
+</div>

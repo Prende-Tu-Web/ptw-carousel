@@ -1,0 +1,68 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;700;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+.lbl{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:8px;}
+.row{display:flex;gap:16px;padding:.5rem 0 1rem;}
+.sl{width:320px;height:320px;flex-shrink:0;overflow:hidden;font-family:'Rubik',sans-serif;border-radius:12px;position:relative;}
+
+.d5a{background:#111a1b;}
+.d5a .content{position:relative;z-index:2;padding:32px;height:100%;display:flex;flex-direction:column;justify-content:space-between;}
+.d5a .tag{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(241,239,244,.3);}
+.d5a h2{font-size:33px;font-weight:900;color:#f1eff4;line-height:1.0;letter-spacing:-.03em;}
+.d5a h2 em{color:#ff638f;font-style:normal;}
+.d5a .sub{font-size:12px;color:rgba(241,239,244,.45);line-height:1.5;max-width:200px;}
+.d5a .handle{font-size:11px;color:rgba(241,239,244,.2);}
+
+.d5b{background:#f1eff4;}
+.d5b .content{position:relative;z-index:2;padding:32px;height:100%;display:flex;flex-direction:column;justify-content:space-between;}
+.d5b .idx{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(17,26,27,.3);}
+.d5b h3{font-size:22px;font-weight:900;color:#111a1b;line-height:1.15;letter-spacing:-.01em;margin-top:8px;}
+.d5b .body{font-size:12.5px;line-height:1.65;color:rgba(17,26,27,.6);}
+.d5b .footer{display:flex;justify-content:space-between;align-items:flex-end;}
+.d5b .handle{font-size:11px;color:rgba(17,26,27,.25);}
+.d5b .tag-pill{background:#ff638f;color:#fff;font-size:10px;font-weight:700;padding:4px 10px;border-radius:100px;letter-spacing:.06em;text-transform:uppercase;}
+</style>
+
+<p class="lbl">Variación D5 — Arco y media luna</p>
+<div class="row">
+  <div class="sl d5a">
+    <svg style="position:absolute;inset:0;width:100%;height:100%" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="320" cy="320" r="200" fill="none" stroke="#ff638f" stroke-width="1.5" opacity=".2"/>
+      <circle cx="320" cy="320" r="140" fill="none" stroke="#ff638f" stroke-width="1" opacity=".14"/>
+      <circle cx="320" cy="320" r="80" fill="none" stroke="#ff638f" stroke-width=".5" opacity=".12"/>
+      <circle cx="320" cy="320" r="30" fill="#ff638f" opacity=".12"/>
+      <circle cx="50" cy="30" r="4" fill="#ff638f" opacity=".4"/>
+      <circle cx="80" cy="50" r="2" fill="#ff638f" opacity=".3"/>
+      <circle cx="30" cy="60" r="2.5" fill="#ff638f" opacity=".25"/>
+    </svg>
+    <div class="content">
+      <div class="tag">Prende Tu Web · Web Corporativa</div>
+      <div>
+        <h2>Una web lenta<br>es una venta<br><em>perdida.</em></h2>
+      </div>
+      <div>
+        <div class="sub">Cómo el rendimiento técnico impacta directamente en tus conversiones B2B.</div>
+        <div class="handle" style="margin-top:14px;">@prendetuweb.cl</div>
+      </div>
+    </div>
+  </div>
+  <div class="sl d5b">
+    <svg style="position:absolute;inset:0;width:100%;height:100%" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="0" cy="0" r="160" fill="none" stroke="#111a1b" stroke-width="1" opacity=".06"/>
+      <circle cx="0" cy="0" r="100" fill="none" stroke="#111a1b" stroke-width=".5" opacity=".05"/>
+      <circle cx="320" cy="160" r="120" fill="#ff638f" opacity=".05"/>
+    </svg>
+    <div class="content">
+      <div class="idx">04 / 05</div>
+      <div>
+        <h3>Imágenes sin comprimir que frenan el LCP</h3>
+        <div class="body" style="margin-top:10px;">Una imagen de 2MB en el hero es suficiente para subir el LCP a más de 4 segundos. En móvil, eso equivale a perder más de la mitad de tus visitantes antes del primer scroll.</div>
+      </div>
+      <div class="footer">
+        <div class="handle">@prendetuweb.cl</div>
+        <div class="tag-pill">Técnico</div>
+      </div>
+    </div>
+  </div>
+</div>

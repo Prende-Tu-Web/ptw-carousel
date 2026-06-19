@@ -1,0 +1,317 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;700;900&family=Space+Grotesk:wght@300;400;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+.lbl{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:6px;margin-top:20px;}
+.row{display:flex;gap:14px;padding:.4rem 0 .8rem;}
+.sl{width:300px;height:300px;flex-shrink:0;overflow:hidden;border-radius:10px;position:relative;}
+
+/* ── E1: NEON GRID ── */
+.e1{background:#0a0e14;font-family:'Space Grotesk',sans-serif;}
+.e1 .c{position:relative;z-index:2;padding:28px;height:100%;display:flex;flex-direction:column;justify-content:space-between;}
+.e1 .tag{font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#ff638f;border:1px solid rgba(255,99,143,.3);display:inline-block;padding:3px 8px;}
+.e1 h2{font-size:29px;font-weight:700;color:#f1eff4;line-height:1.0;letter-spacing:-.02em;margin-top:14px;}
+.e1 h2 em{color:#ff638f;font-style:normal;display:block;}
+.e1 .sub{font-size:11px;color:rgba(241,239,244,.4);line-height:1.5;}
+.e1 .handle{font-size:10px;color:rgba(255,99,143,.5);font-weight:700;letter-spacing:.1em;}
+
+.e1b{background:#0a0e14;font-family:'Space Grotesk',sans-serif;}
+.e1b .c{position:relative;z-index:2;padding:28px;height:100%;display:flex;flex-direction:column;justify-content:space-between;}
+.e1b .idx{font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,99,143,.5);}
+.e1b h3{font-size:20px;font-weight:700;color:#f1eff4;line-height:1.15;margin-top:10px;}
+.e1b .body{font-size:12px;line-height:1.6;color:rgba(241,239,244,.45);}
+.e1b .bar{height:2px;background:linear-gradient(90deg,#ff638f,transparent);width:100%;margin-top:10px;}
+.e1b .footer{display:flex;justify-content:space-between;align-items:center;}
+.e1b .handle{font-size:10px;color:rgba(255,99,143,.4);font-weight:700;letter-spacing:.1em;}
+.e1b .prog{font-size:10px;color:rgba(241,239,244,.2);letter-spacing:.08em;}
+
+/* ── E2: TERMINAL / CLI ── */
+.e2{background:#0d1117;font-family:'Space Grotesk',monospace;}
+.e2 .c{position:relative;z-index:2;padding:24px 28px;height:100%;display:flex;flex-direction:column;justify-content:space-between;}
+.e2 .topbar{background:#1c2128;border-radius:4px 4px 0 0;padding:8px 12px;display:flex;align-items:center;gap:6px;margin:-24px -28px 16px;border-bottom:1px solid rgba(255,99,143,.15);}
+.e2 .dot1{width:8px;height:8px;border-radius:50%;background:#ff638f;}
+.e2 .dot2{width:8px;height:8px;border-radius:50%;background:rgba(241,239,244,.15);}
+.e2 .dot3{width:8px;height:8px;border-radius:50%;background:rgba(241,239,244,.1);}
+.e2 .wintitle{font-size:10px;color:rgba(241,239,244,.3);margin-left:4px;font-family:'Space Grotesk',sans-serif;}
+.e2 .line{font-size:12px;line-height:1.8;color:rgba(241,239,244,.5);font-family:monospace;}
+.e2 .line .prompt{color:#ff638f;}
+.e2 .line .cmd{color:#f1eff4;}
+.e2 .line .out{color:rgba(241,239,244,.35);}
+.e2 .line .hi{color:#4ade80;}
+.e2 h2{font-size:22px;font-weight:700;color:#f1eff4;line-height:1.1;font-family:'Space Grotesk',sans-serif;}
+.e2 .cursor{display:inline-block;width:10px;height:18px;background:#ff638f;vertical-align:middle;animation:blink 1s step-end infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.e2 .handle{font-size:10px;color:rgba(255,99,143,.4);letter-spacing:.1em;}
+
+.e2b{background:#0d1117;font-family:monospace;}
+.e2b .c{position:relative;z-index:2;padding:24px 28px;height:100%;display:flex;flex-direction:column;justify-content:space-between;}
+.e2b .topbar{background:#1c2128;border-radius:4px 4px 0 0;padding:8px 12px;display:flex;align-items:center;gap:6px;margin:-24px -28px 16px;border-bottom:1px solid rgba(255,99,143,.15);}
+.e2b .dot1{width:8px;height:8px;border-radius:50%;background:#ff638f;}
+.e2b .dot2,.e2b .dot3{width:8px;height:8px;border-radius:50%;background:rgba(241,239,244,.12);}
+.e2b .wintitle{font-size:10px;color:rgba(241,239,244,.3);margin-left:4px;font-family:'Space Grotesk',sans-serif;}
+.e2b .line{font-size:11.5px;line-height:1.9;color:rgba(241,239,244,.45);}
+.e2b .line .p{color:#ff638f;}
+.e2b .line .g{color:#4ade80;}
+.e2b .line .w{color:#f1eff4;}
+.e2b .line .m{color:rgba(241,239,244,.25);}
+.e2b .handle{font-size:10px;color:rgba(255,99,143,.3);letter-spacing:.1em;}
+
+/* ── E3: SCANLINES / CRT ── */
+.e3{background:#0c0a14;font-family:'Rubik',sans-serif;}
+.e3 .scanlines{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.18) 3px,rgba(0,0,0,.18) 4px);pointer-events:none;z-index:3;}
+.e3 .c{position:relative;z-index:2;padding:28px;height:100%;display:flex;flex-direction:column;justify-content:space-between;}
+.e3 .tag{font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#ff638f;}
+.e3 h2{font-size:30px;font-weight:900;line-height:1.0;letter-spacing:-.02em;color:#f1eff4;text-shadow:2px 0 0 rgba(255,99,143,.4),-2px 0 0 rgba(100,200,255,.2);}
+.e3 .sub{font-size:11px;color:rgba(241,239,244,.4);line-height:1.5;max-width:190px;}
+.e3 .hud{display:flex;align-items:center;gap:8px;}
+.e3 .hud-dot{width:6px;height:6px;border-radius:50%;background:#ff638f;}
+.e3 .handle{font-size:10px;color:rgba(255,99,143,.5);letter-spacing:.12em;font-weight:700;}
+
+.e3b{background:#0c0a14;font-family:'Rubik',sans-serif;}
+.e3b .scanlines{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.18) 3px,rgba(0,0,0,.18) 4px);pointer-events:none;z-index:3;}
+.e3b .c{position:relative;z-index:2;padding:28px;height:100%;display:flex;flex-direction:column;justify-content:space-between;}
+.e3b .idx{font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,99,143,.5);}
+.e3b h3{font-size:20px;font-weight:900;color:#f1eff4;line-height:1.15;margin-top:8px;text-shadow:1px 0 0 rgba(255,99,143,.3),-1px 0 0 rgba(100,200,255,.15);}
+.e3b .body{font-size:12px;line-height:1.65;color:rgba(241,239,244,.45);}
+.e3b .footer{display:flex;justify-content:space-between;align-items:center;}
+.e3b .handle{font-size:10px;color:rgba(255,99,143,.4);letter-spacing:.12em;}
+.e3b .prog{font-size:10px;color:rgba(241,239,244,.2);}
+
+/* ── E4: NEUBRUTALISM ── */
+.e4{background:#f1eff4;font-family:'Rubik',sans-serif;border:3px solid #111a1b;box-shadow:6px 6px 0 #111a1b;}
+.e4 .c{padding:28px;height:100%;display:flex;flex-direction:column;justify-content:space-between;}
+.e4 .tag{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#111a1b;background:#ff638f;display:inline-block;padding:3px 8px;}
+.e4 h2{font-size:32px;font-weight:900;color:#111a1b;line-height:.95;letter-spacing:-.03em;margin-top:14px;}
+.e4 .accent{display:inline-block;background:#111a1b;color:#ff638f;padding:0 4px;}
+.e4 .sub{font-size:12px;color:rgba(17,26,27,.6);line-height:1.45;border-left:3px solid #ff638f;padding-left:10px;}
+.e4 .handle{font-size:10px;font-weight:700;color:rgba(17,26,27,.4);letter-spacing:.1em;text-transform:uppercase;}
+
+.e4b{background:#111a1b;font-family:'Rubik',sans-serif;border:3px solid #ff638f;box-shadow:5px 5px 0 #ff638f;}
+.e4b .c{padding:28px;height:100%;display:flex;flex-direction:column;justify-content:space-between;}
+.e4b .idx{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#ff638f;background:rgba(255,99,143,.12);display:inline-block;padding:3px 8px;border:1px solid #ff638f;}
+.e4b h3{font-size:21px;font-weight:900;color:#f1eff4;line-height:1.15;margin-top:12px;}
+.e4b .body{font-size:12px;line-height:1.65;color:rgba(241,239,244,.6);}
+.e4b .footer{display:flex;justify-content:space-between;align-items:center;}
+.e4b .handle{font-size:10px;font-weight:700;color:rgba(255,99,143,.5);letter-spacing:.1em;}
+.e4b .sq{width:20px;height:20px;border:2px solid #ff638f;}
+
+/* ── E5: GLASSMORPHISM DARK ── */
+.e5{background:#0f1620;font-family:'Space Grotesk',sans-serif;}
+.e5 .c{position:relative;z-index:2;padding:28px;height:100%;display:flex;flex-direction:column;justify-content:space-between;}
+.e5 .glass{position:absolute;left:20px;top:20px;right:20px;bottom:20px;background:rgba(255,99,143,.04);border:1px solid rgba(255,99,143,.15);border-radius:8px;z-index:1;}
+.e5 .inner{position:relative;z-index:2;}
+.e5 .tag{font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,99,143,.8);}
+.e5 h2{font-size:28px;font-weight:700;color:#f1eff4;line-height:1.05;letter-spacing:-.02em;margin-top:12px;}
+.e5 .sub{font-size:11.5px;color:rgba(241,239,244,.4);line-height:1.5;max-width:200px;margin-top:10px;}
+.e5 .footer-row{display:flex;justify-content:space-between;align-items:flex-end;}
+.e5 .handle{font-size:10px;color:rgba(255,99,143,.4);letter-spacing:.1em;font-weight:700;}
+.e5 .orb1{position:absolute;width:120px;height:120px;border-radius:50%;background:rgba(255,99,143,.12);top:-30px;right:-30px;z-index:0;}
+.e5 .orb2{position:absolute;width:80px;height:80px;border-radius:50%;background:rgba(100,150,255,.06);bottom:-20px;left:-20px;z-index:0;}
+
+.e5b{background:#0f1620;font-family:'Space Grotesk',sans-serif;}
+.e5b .c{position:relative;z-index:2;padding:28px;height:100%;display:flex;flex-direction:column;justify-content:space-between;}
+.e5b .glass{position:absolute;left:20px;top:20px;right:20px;bottom:20px;background:rgba(241,239,244,.03);border:1px solid rgba(241,239,244,.08);border-radius:8px;z-index:1;}
+.e5b .inner{position:relative;z-index:2;}
+.e5b .idx{font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,99,143,.6);}
+.e5b h3{font-size:20px;font-weight:700;color:#f1eff4;line-height:1.15;margin-top:8px;}
+.e5b .body{font-size:12px;line-height:1.6;color:rgba(241,239,244,.4);margin-top:10px;}
+.e5b .footer-row{display:flex;justify-content:space-between;align-items:center;}
+.e5b .handle{font-size:10px;color:rgba(255,99,143,.35);letter-spacing:.1em;}
+.e5b .prog{font-size:10px;color:rgba(241,239,244,.2);}
+.e5b .orb1{position:absolute;width:100px;height:100px;border-radius:50%;background:rgba(255,99,143,.08);bottom:-20px;right:40px;z-index:0;}
+</style>
+
+<h2 class="sr-only">Estilos de carousel futuristas y ciberpunk para LinkedIn</h2>
+
+<p class="lbl">E1 — Neon Grid (futurista oscuro con rejilla)</p>
+<div class="row">
+  <div class="sl e1">
+    <svg style="position:absolute;inset:0;width:100%;height:100%;z-index:1" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="ng" x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">
+          <path d="M30 0 L0 0 0 30" fill="none" stroke="#ff638f" stroke-width=".3" opacity=".25"/>
+        </pattern>
+      </defs>
+      <rect width="300" height="300" fill="url(#ng)"/>
+      <line x1="0" y1="220" x2="300" y2="220" stroke="#ff638f" stroke-width="1" opacity=".4"/>
+      <line x1="0" y1="222" x2="300" y2="222" stroke="#ff638f" stroke-width=".3" opacity=".2"/>
+      <circle cx="260" cy="40" r="30" fill="none" stroke="#ff638f" stroke-width=".5" opacity=".3"/>
+    </svg>
+    <div class="c">
+      <div class="tag">PTW · SEO TÉCNICO</div>
+      <div>
+        <h2>Tu sitio<br>existe.<br><em>El crawler<br>no llega.</em></h2>
+      </div>
+      <div>
+        <div class="sub">Diagnóstico de arquitectura para webs B2B que no están indexando bien.</div>
+        <div class="handle" style="margin-top:12px;">@prendetuweb.cl</div>
+      </div>
+    </div>
+  </div>
+  <div class="sl e1b">
+    <svg style="position:absolute;inset:0;width:100%;height:100%;z-index:1" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="ng2" x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">
+          <path d="M30 0 L0 0 0 30" fill="none" stroke="#ff638f" stroke-width=".3" opacity=".2"/>
+        </pattern>
+      </defs>
+      <rect width="300" height="300" fill="url(#ng2)"/>
+      <line x1="0" y1="60" x2="300" y2="60" stroke="#ff638f" stroke-width="1" opacity=".35"/>
+    </svg>
+    <div class="c">
+      <div class="idx">// 01 de 05</div>
+      <div>
+        <h3>robots.txt bloqueando las páginas que más importan</h3>
+        <div class="body" style="margin-top:10px;">Un Disallow mal puesto puede dejar fuera el crawler de Google por completo. Es el primer lugar donde miramos antes de tocar cualquier otra cosa.</div>
+        <div class="bar"></div>
+      </div>
+      <div class="footer">
+        <div class="handle">@prendetuweb.cl</div>
+        <div class="prog">01 / 05</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p class="lbl">E2 — Terminal / CLI (estética código)</p>
+<div class="row">
+  <div class="sl e2">
+    <svg style="position:absolute;inset:0;width:100%;height:100%;z-index:1" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="300" height="300" fill="none"/>
+    </svg>
+    <div class="c">
+      <div class="topbar">
+        <div class="dot1"></div><div class="dot2"></div><div class="dot3"></div>
+        <span class="wintitle">ptw@seo-audit ~ %</span>
+      </div>
+      <div>
+        <div class="line"><span class="prompt">$ </span><span class="cmd">run seo-audit --site prendetuweb.cl</span></div>
+        <div class="line"><span class="out">Scanning crawlability...</span></div>
+        <div class="line"><span class="out">Issues found: </span><span style="color:#ff638f;font-family:monospace">5 critical</span></div>
+        <div class="line" style="margin-top:8px;"><span class="hi">✓</span><span class="out"> Report ready</span></div>
+      </div>
+      <h2>5 errores que Google no te perdona<span class="cursor"></span></h2>
+      <div class="handle">@prendetuweb.cl</div>
+    </div>
+  </div>
+  <div class="sl e2b">
+    <div class="c">
+      <div class="topbar">
+        <div class="dot1"></div><div class="dot2"></div><div class="dot3"></div>
+        <span class="wintitle">issue_02.md</span>
+      </div>
+      <div>
+        <div class="line"><span class="p">## </span><span class="w">Sitemap XML mal enviado</span></div>
+        <div class="line"><span class="m">priority: </span><span class="g">HIGH</span></div>
+        <div class="line"><span class="m">status: </span><span style="color:#ff638f;font-family:monospace">⚠ unresolved</span></div>
+        <div class="line" style="margin-top:6px;font-family:monospace;font-size:11px;color:rgba(241,239,244,.35);">Google necesita que le indiques</div>
+        <div class="line" style="font-family:monospace;font-size:11px;color:rgba(241,239,244,.35);">exactamente qué páginas indexar.</div>
+        <div class="line" style="font-family:monospace;font-size:11px;color:rgba(241,239,244,.35);">Un sitemap roto = semanas perdidas.</div>
+      </div>
+      <div class="handle">@prendetuweb.cl</div>
+    </div>
+  </div>
+</div>
+
+<p class="lbl">E3 — CRT Scanlines (estética retro-futurista)</p>
+<div class="row">
+  <div class="sl e3">
+    <svg style="position:absolute;inset:0;width:100%;height:100%;z-index:1" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="150" cy="150" r="200" fill="none" stroke="#ff638f" stroke-width=".5" opacity=".08"/>
+      <circle cx="150" cy="150" r="130" fill="none" stroke="#ff638f" stroke-width=".5" opacity=".06"/>
+      <line x1="0" y1="0" x2="300" y2="300" stroke="#ff638f" stroke-width=".3" opacity=".08"/>
+      <line x1="300" y1="0" x2="0" y2="300" stroke="#ff638f" stroke-width=".3" opacity=".08"/>
+    </svg>
+    <div class="scanlines"></div>
+    <div class="c">
+      <div class="tag">// SISTEMA PTW · ACTIVO</div>
+      <h2>GEO:<br>El nuevo<br>SEO para<br>la era IA</h2>
+      <div>
+        <div class="sub">Cómo hacer que ChatGPT y Perplexity citen tu empresa.</div>
+        <div class="hud" style="margin-top:12px;">
+          <div class="hud-dot"></div>
+          <div class="handle">@prendetuweb.cl</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="sl e3b">
+    <svg style="position:absolute;inset:0;width:100%;height:100%;z-index:1" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+      <line x1="0" y1="80" x2="300" y2="80" stroke="#ff638f" stroke-width=".4" opacity=".15"/>
+      <line x1="0" y1="240" x2="300" y2="240" stroke="#ff638f" stroke-width=".4" opacity=".15"/>
+    </svg>
+    <div class="scanlines"></div>
+    <div class="c">
+      <div class="idx">// SEÑAL 03 DE 06</div>
+      <div>
+        <h3>Tu contenido no tiene estructura citeable por LLMs</h3>
+        <div class="body" style="margin-top:10px;">Los modelos de lenguaje priorizan páginas con respuestas directas, encabezados semánticos claros y datos verificables. Sin eso, existes pero no eres citado.</div>
+      </div>
+      <div class="footer">
+        <div class="handle">@prendetuweb.cl</div>
+        <div class="prog">03 / 06</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p class="lbl">E4 — Neubrutalism (anti-diseño con borde grueso)</p>
+<div class="row">
+  <div class="sl e4">
+    <div class="c">
+      <div><span class="tag">PTW · WEB B2B</span></div>
+      <h2>Diseño<br>bonito<br>≠<br><span class="accent">ventas</span></h2>
+      <div>
+        <div class="sub">Lo que ningún diseñador te dice sobre conversión B2B en Chile.</div>
+        <div class="handle" style="margin-top:14px;">@PRENDETUWEB.CL</div>
+      </div>
+    </div>
+  </div>
+  <div class="sl e4b">
+    <div class="c">
+      <div><span class="idx">ERROR #02</span></div>
+      <div>
+        <h3>Sin propuesta de valor clara en el hero</h3>
+        <div class="body" style="margin-top:10px;font-family:'Rubik',sans-serif;font-size:12px;line-height:1.65;color:rgba(241,239,244,.6);">El visitante B2B decide si sigue en tu sitio antes del primer scroll. Si no entiende qué haces en 5 segundos, ya se fue.</div>
+      </div>
+      <div class="footer">
+        <div class="handle">@PRENDETUWEB.CL</div>
+        <div class="sq"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p class="lbl">E5 — Glassmorphism oscuro (orbes difusos)</p>
+<div class="row">
+  <div class="sl e5">
+    <div class="orb1"></div>
+    <div class="orb2"></div>
+    <div class="glass"></div>
+    <div class="c">
+      <div class="inner">
+        <div class="tag">PRENDE TU WEB · SEO</div>
+        <h2 style="margin-top:12px;">Visibilidad<br>digital que<br>no depende<br>de suerte.</h2>
+        <div class="sub">Arquitectura técnica, contenido estructurado y presencia en IA.</div>
+      </div>
+      <div class="footer-row">
+        <div class="handle">@prendetuweb.cl</div>
+      </div>
+    </div>
+  </div>
+  <div class="sl e5b">
+    <div class="orb1"></div>
+    <div class="glass"></div>
+    <div class="c">
+      <div class="inner">
+        <div class="idx">04 / 05</div>
+        <h3>Schema.org ausente o implementado a medias</h3>
+        <div class="body">Los AI crawlers usan datos estructurados para entender de qué trata tu página. Sin Schema bien configurado, el modelo no sabe si eres una empresa, un blog o un directorio.</div>
+      </div>
+      <div class="footer-row">
+        <div class="handle">@prendetuweb.cl</div>
+        <div class="prog">4 / 5</div>
+      </div>
+    </div>
+  </div>
+</div>

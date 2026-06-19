@@ -1,0 +1,75 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;700;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+.lbl{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:8px;}
+.row{display:flex;gap:16px;padding:.5rem 0 1rem;}
+.sl{width:320px;height:320px;flex-shrink:0;overflow:hidden;font-family:'Rubik',sans-serif;border-radius:12px;position:relative;}
+
+.d4a{background:#f1eff4;}
+.d4a .content{position:relative;z-index:2;padding:32px;height:100%;display:flex;flex-direction:column;justify-content:space-between;}
+.d4a .tag{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#ff638f;}
+.d4a h2{font-size:31px;font-weight:900;color:#111a1b;line-height:1.0;letter-spacing:-.03em;}
+.d4a .sub{font-size:12px;color:rgba(17,26,27,.5);line-height:1.5;max-width:210px;}
+.d4a .handle{font-size:11px;color:rgba(17,26,27,.25);}
+.d4a .coral-line{height:3px;width:48px;background:#ff638f;border-radius:2px;margin-bottom:14px;}
+
+.d4b{background:#111a1b;}
+.d4b .content{position:relative;z-index:2;padding:32px;height:100%;display:flex;flex-direction:column;justify-content:space-between;}
+.d4b .top{display:flex;align-items:center;justify-content:space-between;}
+.d4b .idx{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(241,239,244,.25);}
+.d4b .dot-acc{width:8px;height:8px;border-radius:50%;background:#ff638f;}
+.d4b h3{font-size:22px;font-weight:900;color:#f1eff4;line-height:1.15;letter-spacing:-.01em;}
+.d4b .body{font-size:12.5px;line-height:1.65;color:rgba(241,239,244,.55);}
+.d4b .handle{font-size:11px;color:rgba(241,239,244,.2);}
+.d4b .coral-line{height:2px;width:32px;background:#ff638f;border-radius:2px;}
+</style>
+
+<p class="lbl">Variación D4 — Malla de puntos (dot grid)</p>
+<div class="row">
+  <div class="sl d4a">
+    <svg style="position:absolute;inset:0;width:100%;height:100%" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="dots-l" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1.2" fill="#111a1b" opacity=".12"/>
+        </pattern>
+      </defs>
+      <rect width="320" height="320" fill="url(#dots-l)"/>
+      <rect x="180" y="160" width="180" height="180" fill="#ff638f" opacity=".06" rx="80"/>
+      <circle cx="280" cy="260" r="50" fill="#ff638f" opacity=".08"/>
+    </svg>
+    <div class="content">
+      <div class="tag">Prende Tu Web · SEO</div>
+      <div>
+        <div class="coral-line"></div>
+        <h2>Posicionar<br>en Google<br>es un sistema,<br>no un truco.</h2>
+      </div>
+      <div>
+        <div class="sub">Las 5 bases técnicas que toda empresa B2B necesita tener resueltas.</div>
+        <div class="handle" style="margin-top:12px;">@prendetuweb.cl</div>
+      </div>
+    </div>
+  </div>
+  <div class="sl d4b">
+    <svg style="position:absolute;inset:0;width:100%;height:100%" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="dots-d" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1.2" fill="#ff638f" opacity=".18"/>
+        </pattern>
+      </defs>
+      <rect x="190" y="0" width="130" height="320" fill="url(#dots-d)"/>
+    </svg>
+    <div class="content">
+      <div class="top">
+        <div class="idx">03 / 05</div>
+        <div class="dot-acc"></div>
+      </div>
+      <div>
+        <div class="coral-line" style="margin-bottom:12px;"></div>
+        <h3>Sitemap XML desactualizado o mal enviado</h3>
+        <div class="body" style="margin-top:10px;">Google necesita que le digas exactamente qué páginas quieres indexar. Un sitemap roto o ignorado en Search Console puede costarte semanas de visibilidad perdida.</div>
+      </div>
+      <div class="handle">@prendetuweb.cl</div>
+    </div>
+  </div>
+</div>

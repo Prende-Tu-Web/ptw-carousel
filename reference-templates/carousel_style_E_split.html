@@ -1,0 +1,50 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;700;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+.lbl{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:8px;}
+.row{display:flex;gap:16px;padding:.5rem 0 1rem;}
+.sl{width:320px;height:320px;flex-shrink:0;overflow:hidden;font-family:'Rubik',sans-serif;border-radius:12px;position:relative;}
+
+.sE1{background:#111a1b;display:flex;flex-direction:column;}
+.sE1 .top{flex:1;background:#ff638f;padding:28px 28px 20px;display:flex;flex-direction:column;justify-content:space-between;}
+.sE1 .top .tag{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.65);}
+.sE1 .top h2{font-size:28px;font-weight:900;color:#fff;line-height:1.05;letter-spacing:-.02em;margin-top:8px;}
+.sE1 .bot{padding:18px 28px;display:flex;align-items:center;justify-content:space-between;}
+.sE1 .sub{font-size:12px;color:rgba(241,239,244,.5);max-width:200px;line-height:1.4;}
+.sE1 .arr{font-size:22px;color:#ff638f;font-weight:900;}
+
+.sE2{background:#f1eff4;display:flex;}
+.sE2 .left{width:40px;background:#ff638f;flex-shrink:0;display:flex;align-items:flex-end;padding:16px 0;}
+.sE2 .left span{writing-mode:vertical-rl;transform:rotate(180deg);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.8);font-family:'Rubik',sans-serif;padding:0 13px;}
+.sE2 .right{flex:1;padding:28px 24px;display:flex;flex-direction:column;justify-content:space-between;}
+.sE2 .idx{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(17,26,27,.35);}
+.sE2 h3{font-size:22px;font-weight:900;color:#111a1b;line-height:1.15;letter-spacing:-.01em;margin-top:8px;}
+.sE2 .body{font-size:12.5px;line-height:1.65;color:rgba(17,26,27,.6);}
+.sE2 .handle{font-size:11px;color:rgba(17,26,27,.3);}
+</style>
+
+<p class="lbl">Estilo E — Split horizontal / banda lateral</p>
+<div class="row">
+  <div class="sl sE1">
+    <div class="top">
+      <div class="tag">Prende Tu Web · Web B2B</div>
+      <h2>Tu sitio corporativo<br>no convierte.<br>Este es el por qué.</h2>
+    </div>
+    <div class="bot">
+      <div class="sub">6 errores que cometen todas las webs B2B en Chile.</div>
+      <div class="arr">→</div>
+    </div>
+  </div>
+  <div class="sl sE2">
+    <div class="left"><span>Error #2</span></div>
+    <div class="right">
+      <div>
+        <div class="idx">02 / 06</div>
+        <h3>No hay CTA en el primer scroll</h3>
+        <div class="body" style="margin-top:10px;">El 70% de los visitantes B2B decide en los primeros 8 segundos si sigue o no. Sin un llamado a la acción visible antes del fold, pierdes la ventana.</div>
+      </div>
+      <div class="handle">@prendetuweb.cl</div>
+    </div>
+  </div>
+</div>

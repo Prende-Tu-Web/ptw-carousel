@@ -1,0 +1,63 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;700;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+.lbl{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:8px;}
+.row{display:flex;gap:16px;padding:.5rem 0 1rem;}
+.sl{width:320px;height:320px;flex-shrink:0;overflow:hidden;font-family:'Rubik',sans-serif;border-radius:12px;position:relative;}
+
+.sF1{background:#111a1b;}
+.sF1 .bg-word{position:absolute;bottom:-18px;left:-8px;font-size:128px;font-weight:900;color:rgba(255,99,143,.07);line-height:1;letter-spacing:-.06em;white-space:nowrap;pointer-events:none;font-family:'Rubik',sans-serif;}
+.sF1 .content{position:relative;z-index:2;padding:32px;height:100%;display:flex;flex-direction:column;justify-content:space-between;}
+.sF1 .top-row{display:flex;align-items:center;justify-content:space-between;}
+.sF1 .tag{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(241,239,244,.35);}
+.sF1 .dot{width:8px;height:8px;border-radius:50%;background:#ff638f;}
+.sF1 h2{font-size:36px;font-weight:900;color:#f1eff4;line-height:1.0;letter-spacing:-.03em;}
+.sF1 h2 em{color:#ff638f;font-style:normal;}
+.sF1 .sub{font-size:12px;color:rgba(241,239,244,.45);line-height:1.5;max-width:220px;}
+.sF1 .handle{font-size:11px;color:rgba(241,239,244,.2);}
+
+.sF2{background:#f1eff4;}
+.sF2 .stripe{position:absolute;top:0;right:0;width:6px;height:100%;background:#ff638f;}
+.sF2 .content{position:relative;z-index:2;padding:28px 34px 28px 28px;height:100%;display:flex;flex-direction:column;justify-content:space-between;}
+.sF2 .num{font-size:88px;font-weight:900;line-height:1;letter-spacing:-.05em;color:#ff638f;margin-bottom:-8px;}
+.sF2 h3{font-size:20px;font-weight:900;color:#111a1b;line-height:1.2;letter-spacing:-.01em;}
+.sF2 .body{font-size:12.5px;line-height:1.65;color:rgba(17,26,27,.6);}
+.sF2 .footer{display:flex;justify-content:space-between;align-items:flex-end;}
+.sF2 .handle{font-size:11px;color:rgba(17,26,27,.3);}
+.sF2 .prog{font-size:10px;font-weight:700;color:rgba(17,26,27,.25);letter-spacing:.1em;text-transform:uppercase;}
+</style>
+
+<p class="lbl">Estilo F — Tipografía oversized como elemento visual</p>
+<div class="row">
+  <div class="sl sF1">
+    <div class="bg-word" aria-hidden="true">SEO</div>
+    <div class="content">
+      <div class="top-row">
+        <div class="tag">Prende Tu Web</div>
+        <div class="dot"></div>
+      </div>
+      <div>
+        <h2>Posicionar<br>no es<br><em>magia.</em><br>Es estructura.</h2>
+      </div>
+      <div>
+        <div class="sub">Lo que nadie te dice sobre SEO técnico en sitios WordPress corporativos.</div>
+        <div class="handle" style="margin-top:14px;">@prendetuweb.cl</div>
+      </div>
+    </div>
+  </div>
+  <div class="sl sF2">
+    <div class="stripe"></div>
+    <div class="content">
+      <div>
+        <div class="num">03</div>
+        <h3>Canonical tags apuntando al lugar equivocado</h3>
+      </div>
+      <div class="body">Si tus canonicals están mal configurados, Google puede estar indexando versiones duplicadas de tu contenido — y dándole crédito a la página incorrecta.</div>
+      <div class="footer">
+        <div class="handle">@prendetuweb.cl</div>
+        <div class="prog">3 / 5</div>
+      </div>
+    </div>
+  </div>
+</div>
