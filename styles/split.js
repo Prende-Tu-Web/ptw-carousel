@@ -14,8 +14,9 @@ window.PTW_STYLES.split = {
 .style-split .ss-mark-wrap,.style-split .mark{z-index:8;}
 .style-split .bar{z-index:8;}
 
-/* highlight span usado por hl() en headline de cover */
-.style-split .ss-h1 .c{color:var(--coral);}
+/* highlight span usado por hl() en headline de cover — el cover usa fondo
+   coral (.ss-top), así que el highlight debe ser oscuro, no coral-sobre-coral */
+.style-split .ss-h1 .c{color:var(--dark);}
 
 /* ============ SLIDE — COVER ============ */
 .style-split.cover.ss-cover{padding:0;}
@@ -60,7 +61,7 @@ window.PTW_STYLES.split = {
 }
 .style-split.ss-content .ss-main{
   flex:1 1 auto;padding:64px 72px;display:flex;flex-direction:column;
-  justify-content:space-between;min-width:0;position:relative;z-index:2;
+  justify-content:center;min-width:0;position:relative;z-index:2;
 }
 .style-split.ss-content.light .ss-main{background:var(--light);color:var(--dark);}
 .style-split.ss-content.dark .ss-main{background:var(--dark);color:var(--light);}

@@ -47,8 +47,10 @@ window.PTW_STYLES.neubrutalism = {
 .style-neubrutalism.cover .nb-corner{position:absolute;top:64px;right:64px;width:54px;height:54px;border:4px solid var(--coral);background:var(--light);box-shadow:7px 7px 0 var(--coral);z-index:1;}
 
 /* ============ SLIDE — CONTENT ============ */
-.style-neubrutalism.content .nb-heading{font-size:60px;font-weight:900;color:var(--dark);line-height:1.06;letter-spacing:-.02em;margin-top:30px;}
+.style-neubrutalism .nb-heading{font-size:60px;font-weight:900;color:var(--dark);line-height:1.06;letter-spacing:-.02em;margin-top:30px;}
+.style-neubrutalism.stats .nb-heading{font-size:40px;max-width:24ch;}
 .style-neubrutalism.dark .nb-heading{color:var(--light);}
+.style-neubrutalism.content .nb-c,.style-neubrutalism.stats .nb-c{justify-content:center;}
 .style-neubrutalism.content .nb-body{font-size:20px;line-height:1.6;color:var(--dark);opacity:.65;margin-top:22px;max-width:32ch;}
 .style-neubrutalism.dark .nb-body{color:var(--light);opacity:.6;}
 .style-neubrutalism .nb-tip{margin-top:34px;display:flex;gap:18px;align-items:flex-start;background:var(--light);border:4px solid var(--dark);box-shadow:8px 8px 0 var(--dark);padding:22px 26px;max-width:34rem;}
@@ -132,7 +134,7 @@ window.PTW_STYLES.neubrutalism = {
     return `<div class="unit">
   <div class="slabel"><span class="n">${n}</span> Estadísticas</div>
   <div class="frame">
-    <div class="slide style-neubrutalism ${theme}">
+    <div class="slide style-neubrutalism ${theme} stats">
       ${MARK}
       <div class="nb-c">
         <div class="nb-stats-head">

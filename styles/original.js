@@ -11,8 +11,8 @@ window.PTW_STYLES.original = {
 /* shared type */
 .style-original .tag{font-size:13px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--coral);display:inline-flex;align-items:center;gap:12px;}
 .style-original .tag::before{content:"";width:26px;height:2px;background:var(--coral);display:inline-block;}
-.style-original .h-content{font-size:52px;font-weight:800;letter-spacing:-.035em;line-height:1.08;margin:22px 0 0;}
-.style-original .p-body{font-size:18px;font-weight:400;line-height:1.65;color:var(--muted);max-width:30ch;margin-top:22px;}
+.style-original .h-content{font-size:58px;font-weight:800;letter-spacing:-.035em;line-height:1.08;margin:22px 0 0;}
+.style-original .p-body{font-size:20px;font-weight:400;line-height:1.65;color:var(--muted);max-width:30ch;margin-top:22px;}
 .style-original.dark .p-body{color:#9aa0a6;}
 
 /* decorative big number */

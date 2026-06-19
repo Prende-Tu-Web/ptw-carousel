@@ -9,7 +9,7 @@ window.PTW_STYLES.geometric = {
   css: `
 /* ---------- contenedor de formas decorativas ---------- */
 .style-geometric .sg-bg{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;}
-.style-geometric .sg-body{position:relative;z-index:5;flex:1 1 auto;display:flex;flex-direction:column;justify-content:space-between;min-height:0;}
+.style-geometric .sg-body{position:relative;z-index:5;flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;min-height:0;}
 
 /* ---------- tipografía compartida ---------- */
 .style-geometric .sg-tag{font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--coral);display:inline-flex;align-items:center;gap:10px;}

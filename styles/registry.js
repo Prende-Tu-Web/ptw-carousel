@@ -65,5 +65,7 @@ window.PTW_STYLE_LIST = [
   { id: 'original',     name: 'Original',     desc: 'Glow + número de fondo' },
   { id: 'geometric',     name: 'Geométrico',   desc: 'Formas SVG decorativas' },
   { id: 'split',         name: 'Split',        desc: 'Bloques de color' },
-  { id: 'neubrutalism',  name: 'Neobrutalista',desc: 'Bordes gruesos + sombra' }
+  { id: 'neubrutalism',  name: 'Neobrutalista',desc: 'Bordes gruesos + sombra' },
+  { id: 'editorial',     name: 'Editorial',    desc: 'Barra lateral + número de marca' },
+  { id: 'minimal',       name: 'Minimalista',  desc: 'Sin formas, mucho aire' }
 ];
